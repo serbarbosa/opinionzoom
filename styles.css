@@ -1,0 +1,85 @@
+body{
+	background-color: #dde1d8;
+}
+
+.sidenav {
+	height: 100%;
+	width: 20%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #07359b;
+	overflow-x: hidden;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	border-right: 8px solid #b5b5b5;
+	font-size: 22px;
+  color: white;
+}
+
+.options-list{
+	margin-top: 8%;
+}
+
+.option-box{
+	transition: 0.5s;
+}
+
+.option-box :hover{
+	padding: 2px 3px 2px;
+	margin-left: 0%:
+
+}
+
+.option-box.active{
+	background-color: #dde1d8;
+	color: black;
+	padding: 4px 1px 4px
+}
+
+.option-text{
+	margin-left: 2%;
+	margin-top: 1%;
+	margin-bottom: 1%;
+}
+
+.option :hover{
+   cursor: pointer;
+ 
+}
+
+.suboption{
+	font-size: 20px;
+  list-style-type: none;
+	transition: 0.5s;
+}
+
+.suboption.active{
+  color: black;
+	background-color: #3b75e6;
+  padding: 3px 1px 3px;
+}
+
+.suboption-text{
+	margin-left: 10%;
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+.suboptions-list{
+	background-color: #739df1;
+	float: left;
+	width: 100%;
+	height: 100%;
+}
+
+
+.main{
+	height: 100%;
+	width: 80%;
+	margin-left: 21%;
+	padding: 3px 3px 3px;
+}

@@ -6,40 +6,95 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>OpinionZoom</title>
-		<LINK REL="stylesheet" TYPE="text/css" HREF = "style.css"/>
+		<LINK REL="stylesheet" TYPE="text/css" HREF = "styles.css"/>
     </head>
 
     <body>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<script type="text/javascript" src="script.js"></script>
 
         <div id='app'> <!-- inicio app vue-->
+
             <div class="sidenav">
-                <ul>
-                    <li>
-                        <a class='sidenav-current'>
-                            Início
-                        </a>
-                    </li>
-                    <li>
-                        <a class='sidenav-option'>
-                            OpinionZoom
-                        </a>
-                    </li>
-                    <li>
-                        <a class='sidenav-option'>
-                            Ferramentas
-                        </a>
-                    </li>
-                    <li>
-                        <a class='sidenav-option'>
-                            API
-                        </a>
-                    </li>
-                </ul>
+                <div class='options-list' v-for='(op, index) in options'>
+                    <!-- mostrar todas as opcoes -->
+                    <div class='option' >
+                        <div class="option-box"  v-on:click.prevent="changeCurrOp(index)">
+                            <div class="option-text">
+                                {{op}}
+                            </div>
+                        </div>
+                        <!-- mostrar subopcoes para a opcao selecionada -->
+                        <div class="suboptions-list" v-if='index === currOption'>
+                            <div class="sublist" v-for='(subOp, subIndex) in subOptions[currOption].ops'>
+                                <div class="suboption" v-on:click.prevent="changeCurrSubOp(subIndex)">
+                                    <div class="suboption-text">
+                                        {{subOp}}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div class="main">
+
+                <!-- uma nova entrada possivel dependendo da opcao selecionada atualmente -->
+                <div class="inicio" v-if="options[currOption] === 'Início'">
+                    Introdução e explicação sobre o projeto
+                </div>
+
+                <div class="opinionzoom" v-if="options[currOption] === 'OpinionZoom'">
+                    <div class="opinionzoom-0" v-if="currSubOp === -1">
+                        Pipeline de sentimento
+                    </div>
+                    <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como usar?'">
+                        Instruções para uso do pipeline
+                    </div>
+                </div>
+
+                <div class="ferramentas" v-if="options[currOption] === 'Ferramentas'">
+                    <div class="ferramentas-0" v-if="currSubOp === -1">
+                        Explicação de cada ferramenta disponível
+                    </div>
+                    <div class="ferramentas-1" v-if="subOptions[currOption].ops[currSubOp] === 'Normalizador'">
+                        Entrada para uso do normalizador
+                    </div>
+                    <div class="ferramentas-2" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de qualidade'">
+                        Entrada para uso do filtro de qualidade
+                    </div>
+                    <div class="ferramentas-3" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de subjetividade'">
+                        Entrada para uso do filtro de subjetividade
+                    </div>
+                    <div class="ferramentas-4" v-if="subOptions[currOption].ops[currSubOp] === 'Extrator e classificador de aspectos'">
+                        Entrada para uso do extrator e classificador de aspectos
+                    </div>
+                    <div class="ferramentas-5" v-if="subOptions[currOption].ops[currSubOp] === 'Sumarizador de revisões'">
+                        Entrada para uso do sumarizador de revisões
+                    </div>
+                </div>
+
+                <div class="api" v-if="options[currOption] === 'API'">
+                    <div class="api-0" v-if="currSubOp === -1">
+                        texto sobre a API
+                    </div>
+                    <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Documentação'">
+                        Explicação de cada função disponibilizada pela API
+                    </div>
+                    <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Dependências'">
+                        Programas necessários para o funcionamento da api e um tutorial de obtenção dos mais complicados
+                    </div>
+                    <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Download'">
+                        link para download da api (github?)
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
+		<script type="text/javascript" src="scripts.js"></script>
     </body>
 
 </html>
