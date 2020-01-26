@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>OpinionZoom</title>
-		<LINK REL="stylesheet" TYPE="text/css" HREF = "styles.css"/>
+		<link REL="stylesheet" TYPE="text/css" HREF = "styles.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Amatic+SC&display=swap" rel="stylesheet">
     </head>
 
     <body>
@@ -15,22 +16,24 @@
         <div id='app'> <!-- inicio app vue-->
 
             <div class="sidenav">
-                <div class='options-list' v-for='(op, index) in options'>
-                    <!-- mostrar todas as opcoes -->
-                    <div class='option' >
-                        <div class="option-box"  v-on:click.prevent="changeCurrOp(index)">
-                            <div class="option-text">
-                                {{op}}
+                <div class="options-list-box">
+                    <div class='options-list' v-for='(op, index) in options'>
+                        <!-- mostrar todas as opcoes -->
+                        <div class='option' >
+                            <div class="option-box"  v-on:click.prevent="changeCurrOp(index)">
+                                <div class="option-text">
+                                    {{op}}
+                                </div>
                             </div>
-                        </div>
-                        <!-- mostrar subopcoes para a opcao selecionada -->
-                        <div class="suboptions-list" v-if='index === currOption'>
-                            <div class="sublist" v-for='(subOp, subIndex) in subOptions[currOption].ops'>
-                                <div class="suboption" v-on:click.prevent="changeCurrSubOp(subIndex)">
-                                    <div class="suboption-text">
-                                        {{subOp}}
-                                    </div>
+                            <!-- mostrar subopcoes para a opcao selecionada -->
+                            <div class="suboptions-list" v-if='index === currOption && subOpActive'>
+                                <div class="sublist" v-for='(subOp, subIndex) in subOptions[currOption].ops'>
+                                    <div class="suboption" v-on:click.prevent="changeCurrSubOp(subIndex)">
+                                        <div class="suboption-text">
+                                            {{subOp}}
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -46,8 +49,19 @@
                 </div>
 
                 <div class="opinionzoom" v-if="options[currOption] === 'OpinionZoom'">
+
+                    <div class="opinionzoom-logo">
+                        OpinionZoom
+                    </div>
                     <div class="opinionzoom-0" v-if="currSubOp === -1">
-                        Pipeline de sentimento
+                        <div class="search-box-form">
+                            <form id="search-box" action="index.html" method="post">
+                                <input class="config-btn" type="button" value="Configurar"/>
+                                <input id="search-input" type="text" maxlength="100" placeholder="Obter revisões"/>
+                                <input id="search-submit" type="image" src="assets/doc.png"/>
+                            </form>
+                        </div>
+
                     </div>
                     <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como usar?'">
                         Instruções para uso do pipeline
@@ -59,7 +73,37 @@
                         Explicação de cada ferramenta disponível
                     </div>
                     <div class="ferramentas-1" v-if="subOptions[currOption].ops[currSubOp] === 'Normalizador'">
-                        Entrada para uso do normalizador
+                        <!-- Entrada para uso do normalizador -->
+                        <div id="enelvo-header">
+                            Normalizador Enelvo
+                        </div>
+
+                        <!-- caixa de input de texto ou de arquivo -->
+                        <form class="text-input-form" action="index.html" method="post">
+                            <div class="text-input-box">
+                                <div class="text-input-options">
+                                    <div class="input-option active" v-on:click.prevent='setSelectionOp(0)'>
+                                        Texto
+                                    </div>
+                                    <div class="input-option" v-on:click.prevent='setSelectionOp(1)'>
+                                        Arquivo(.txt)
+                                    </div>
+                                </div>
+                                <!-- depende de quem estiver selecionado -->
+                                <div class="text-input" v-if="mainPageSelected === 0">
+                                    <textarea class="input-area text" rows="16" cols="92"></textarea>
+                                </div>
+                                <div class="file-input" v-if="mainPageSelected === 1">
+                                    <div class="input-area file">
+                                        <input class="file-choose" type="file"></input>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input id="normalize-btn" type="button" name="" value="Iniciar">
+                        </form>
+
+
                     </div>
                     <div class="ferramentas-2" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de qualidade'">
                         Entrada para uso do filtro de qualidade
