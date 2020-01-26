@@ -13,6 +13,30 @@
     <body>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
+        <!-- template para caixa de insercao de texto -->
+        <script type="text/x-template" id="text-input-template">
+            <div class="text-input-box">
+                <div class="text-input-options">
+                    <div class="input-option active" v-on:click.prevent='setSelectionOp(0)'>
+                        Texto
+                    </div>
+                    <div class="input-option" v-on:click.prevent='setSelectionOp(1)'>
+                        Arquivo(.txt)
+                    </div>
+                </div>
+                <!-- depende de quem estiver selecionado -->
+                <div class="text-input" v-if="mainPageSelected === 0">
+                    <textarea class="input-area text" rows="16" cols="92"></textarea>
+                </div>
+                <div class="file-input" v-if="mainPageSelected === 1">
+                    <div class="input-area file">
+                        <input class="file-choose" type="file"></input>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+
         <div id='app'> <!-- inicio app vue-->
 
             <div class="sidenav">
@@ -80,25 +104,10 @@
 
                         <!-- caixa de input de texto ou de arquivo -->
                         <form class="text-input-form" action="index.html" method="post">
-                            <div class="text-input-box">
-                                <div class="text-input-options">
-                                    <div class="input-option active" v-on:click.prevent='setSelectionOp(0)'>
-                                        Texto
-                                    </div>
-                                    <div class="input-option" v-on:click.prevent='setSelectionOp(1)'>
-                                        Arquivo(.txt)
-                                    </div>
-                                </div>
-                                <!-- depende de quem estiver selecionado -->
-                                <div class="text-input" v-if="mainPageSelected === 0">
-                                    <textarea class="input-area text" rows="16" cols="92"></textarea>
-                                </div>
-                                <div class="file-input" v-if="mainPageSelected === 1">
-                                    <div class="input-area file">
-                                        <input class="file-choose" type="file"></input>
-                                    </div>
-                                </div>
-                            </div>
+                            <text-input-component
+                                :main-page-selected="mainPageSelected"
+                                v-model="mainPageSelected"
+                                ></text-input-component>
 
                             <input id="normalize-btn" type="button" name="" value="Iniciar">
                         </form>
@@ -107,15 +116,51 @@
                     </div>
                     <div class="ferramentas-2" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de qualidade'">
                         Entrada para uso do filtro de qualidade
+                        <form class="text-input-form" action="index.html" method="post">
+                            <text-input-component
+                                :main-page-selected="mainPageSelected"
+                                v-model="mainPageSelected"
+                                ></text-input-component>
+
+                            <input id="normalize-btn" type="button" name="" value="Iniciar">
+                        </form>
+
                     </div>
+
                     <div class="ferramentas-3" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de subjetividade'">
                         Entrada para uso do filtro de subjetividade
+                        <form class="text-input-form" action="index.html" method="post">
+                            <text-input-component
+                                :main-page-selected="mainPageSelected"
+                                v-model="mainPageSelected"
+                                ></text-input-component>
+
+                            <input id="normalize-btn" type="button" name="" value="Iniciar">
+                        </form>
                     </div>
+
                     <div class="ferramentas-4" v-if="subOptions[currOption].ops[currSubOp] === 'Extrator e classificador de aspectos'">
                         Entrada para uso do extrator e classificador de aspectos
+                        <form class="text-input-form" action="index.html" method="post">
+                            <text-input-component
+                                :main-page-selected="mainPageSelected"
+                                v-model="mainPageSelected"
+                                ></text-input-component>
+
+                            <input id="normalize-btn" type="button" name="" value="Iniciar">
+                        </form>
                     </div>
+
                     <div class="ferramentas-5" v-if="subOptions[currOption].ops[currSubOp] === 'Sumarizador de revisões'">
                         Entrada para uso do sumarizador de revisões
+                        <form class="text-input-form" action="index.html" method="post">
+                            <text-input-component
+                                :main-page-selected="mainPageSelected"
+                                v-model="mainPageSelected"
+                                ></text-input-component>
+
+                            <input id="normalize-btn" type="button" name="" value="Iniciar">
+                        </form>
                     </div>
                 </div>
 

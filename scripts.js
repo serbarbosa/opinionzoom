@@ -1,3 +1,18 @@
+Vue.component('text-input-component', {
+    template: '#text-input-template',
+    props: ['mainPageSelected'],
+    methods: {
+        setSelectionOp: function(val){
+            this.$emit("input", val)
+
+            var prevOp = document.getElementsByClassName('input-option active')
+            if(prevOp.length != 0)
+                prevOp[0].className = 'input-option'
+            document.getElementsByClassName('input-option')[val].className += ' active'
+        }
+    }
+})
+
 new Vue({
     el: '#app',
 
@@ -71,22 +86,21 @@ new Vue({
         changeCurrSubOp(subOpIndex){
             this.currSubOp = subOpIndex
 
-            this.mainPageSelected = 0;  //reseta variavel de controle de opcoes
             //controla className para fazer highlight na subopcao selecionada
             var prevElem = document.getElementsByClassName('suboption active')
             if(prevElem.length != 0)
                 prevElem[0].className = 'suboption'
             document.getElementsByClassName('suboption')[subOpIndex].className += ' active'
 
-        },
-
-        setSelectionOp(val){
-            this.mainPageSelected = val;
+            //resetando opcoes de input das ferramentas
+            this.mainPageSelected = 0;
             var prevOp = document.getElementsByClassName('input-option active')
             if(prevOp.length != 0)
                 prevOp[0].className = 'input-option'
-            document.getElementsByClassName('input-option')[val].className += ' active'
-        }
+            var currOp = document.getElementsByClassName('input-option')
+            if(currOp.length != 0)
+                currOp[0].className += ' active'
+        },
     }
 
 })
