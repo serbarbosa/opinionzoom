@@ -15,7 +15,7 @@ Vue.component('text-input-component', {
 
 new Vue({
     el: '#app',
-
+    delimiters: ["[[", "]]"],
     data: {
         currOption: 0,
         options:[

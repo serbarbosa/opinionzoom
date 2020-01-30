@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -6,12 +7,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>OpinionZoom</title>
-		<link REL="stylesheet" TYPE="text/css" HREF = "styles.css"/>
+		<!--<link rel="stylesheet" TYPE="text/css" HREF = "styles.css"/>-->
+        <link rel="stylesheet" type="text/css" href="{% static 'main/styles.css' %}">
         <link href="https://fonts.googleapis.com/css?family=Amatic+SC&display=swap" rel="stylesheet">
     </head>
 
     <body>
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.common.dev.js"></script>
 
         <!-- template para caixa de insercao de texto -->
         <script type="text/x-template" id="text-input-template">
@@ -46,7 +48,7 @@
                         <div class='option' >
                             <div class="option-box"  v-on:click.prevent="changeCurrOp(index)">
                                 <div class="option-text">
-                                    {{op}}
+                                    [[op]]
                                 </div>
                             </div>
                             <!-- mostrar subopcoes para a opcao selecionada -->
@@ -54,7 +56,7 @@
                                 <div class="sublist" v-for='(subOp, subIndex) in subOptions[currOption].ops'>
                                     <div class="suboption" v-on:click.prevent="changeCurrSubOp(subIndex)">
                                         <div class="suboption-text">
-                                            {{subOp}}
+                                            [[subOp]]
                                         </div>
 
                                     </div>
@@ -79,10 +81,10 @@
                     </div>
                     <div class="opinionzoom-0" v-if="currSubOp === -1">
                         <div class="search-box-form">
-                            <form id="search-box" action="index.html" method="post">
+                            <form id="search-box" action="main/" method="get">
                                 <input class="config-btn" type="button" value="Configurar"/>
                                 <input id="search-input" type="text" maxlength="100" placeholder="Obter revisões"/>
-                                <input id="search-submit" type="image" src="assets/doc.png"/>
+                                <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}"/>
                             </form>
                         </div>
 
@@ -122,7 +124,6 @@
                                 v-model="mainPageSelected"
                                 ></text-input-component>
 
-                            <input id="normalize-btn" type="button" name="" value="Iniciar">
                         </form>
 
                     </div>
@@ -135,7 +136,6 @@
                                 v-model="mainPageSelected"
                                 ></text-input-component>
 
-                            <input id="normalize-btn" type="button" name="" value="Iniciar">
                         </form>
                     </div>
 
@@ -147,7 +147,6 @@
                                 v-model="mainPageSelected"
                                 ></text-input-component>
 
-                            <input id="normalize-btn" type="button" name="" value="Iniciar">
                         </form>
                     </div>
 
@@ -159,7 +158,6 @@
                                 v-model="mainPageSelected"
                                 ></text-input-component>
 
-                            <input id="normalize-btn" type="button" name="" value="Iniciar">
                         </form>
                     </div>
                 </div>
@@ -183,7 +181,8 @@
 
         </div>
 
-		<script type="text/javascript" src="scripts.js"></script>
+	<script type="text/javascript" src="scripts.js"></script>
+	<script type="text/javascript" src="{%static 'main/scripts.js'%}"></script>
     </body>
 
 </html>
