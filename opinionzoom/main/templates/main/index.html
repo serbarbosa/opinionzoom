@@ -14,6 +14,7 @@
 
     <body>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.common.dev.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script> <!-- usado pra fazer requisicoes http no vue app -->
 
         <!-- template para caixa de insercao de texto -->
         <script type="text/x-template" id="text-input-template">
@@ -83,8 +84,8 @@
                         <div class="search-box-form">
                             <form id="search-box" action="main/" method="get">
                                 <input class="config-btn" type="button" value="Configurar"/>
-                                <input id="search-input" type="text" maxlength="100" placeholder="Obter revisões"/>
-                                <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}"/>
+                                <input id="search-input" type="text" maxlength="100" placeholder="Obter revisões" v-model="searchField"/>
+                                <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}" v-on:click.prevent="searchQuery()" />
                             </form>
                         </div>
 

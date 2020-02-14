@@ -60,11 +60,12 @@ new Vue({
             }
         ],
         mainPageSelected: 0,    //variavel para controlar opcoes selecionadas(flexivel)
-    }
-    ,
+        searchField : '',
+        waitingResponse : false,
+    },
 
     methods: {
-        changeCurrOp(index){
+        changeCurrOp: function(index){
             this.currOption = index
             this.currSubOp = -1
             this.subOpActive = true;
@@ -83,7 +84,7 @@ new Vue({
             document.getElementsByClassName('option-box')[index].className += ' active'
         },
 
-        changeCurrSubOp(subOpIndex){
+        changeCurrSubOp: function(subOpIndex){
             this.currSubOp = subOpIndex
 
             //controla className para fazer highlight na subopcao selecionada
@@ -101,6 +102,21 @@ new Vue({
             if(currOp.length != 0)
                 currOp[0].className += ' active'
         },
-    }
+
+        searchQuery: function(){
+            if (!this.waitingResponse){
+                this.waitingResponse = true;
+                this.$http.get('main/search', {params: {'searchField' : this.searchField}}).then(
+                    function(response){
+                        console.log(response)
+                        this.waitingResponse = false;
+                    },
+                    function(response){//error
+                        console.log("error")
+                    }
+                );
+            }
+        },
+    },
 
 })
