@@ -49,7 +49,7 @@
                         <div class='option' >
                             <div class="option-box"  v-on:click.prevent="changeCurrOp(index)">
                                 <div class="option-text">
-                                    [[op]]
+                                    #%op%#
                                 </div>
                             </div>
                             <!-- mostrar subopcoes para a opcao selecionada -->
@@ -57,7 +57,7 @@
                                 <div class="sublist" v-for='(subOp, subIndex) in subOptions[currOption].ops'>
                                     <div class="suboption" v-on:click.prevent="changeCurrSubOp(subIndex)">
                                         <div class="suboption-text">
-                                            [[subOp]]
+                                            #%subOp%#
                                         </div>
 
                                     </div>
@@ -68,6 +68,19 @@
                 </div>
             </div>
 
+            <div class="project-logos">
+                <a href="https://sites.google.com/icmc.usp.br/opinando" target="_blank" class="logo">
+                    <img src="{%static 'assets/opinando.png'%}" alt="OPINANDO" class="logo-img">
+                </a>
+                <a href="http://www.nilc.icmc.usp.br/nilc/index.php" target="_blank" class="logo">
+                    <img src="{%static 'assets/nilc.png'%}" alt="ICMC" class="logo-img">
+                </a>
+                <a href="https://www.icmc.usp.br/" target="_blank" class="logo">
+                    <img src="{%static 'assets/icmc.png'%}" alt="NILC" class="logo-img">
+                </a>
+            </div>
+
+
             <div class="main">
 
                 <!-- uma nova entrada possivel dependendo da opcao selecionada atualmente -->
@@ -77,10 +90,11 @@
 
                 <div class="opinionzoom" v-if="options[currOption] === 'OpinionZoom'">
 
-                    <div class="opinionzoom-logo">
-                        OpinionZoom
-                    </div>
-                    <div class="opinionzoom-0" v-if="currSubOp === -1">
+
+                    <div class="opinionzoom-0" v-if="currSubOp === -1 && responseStage === 0">
+                        <div class="opinionzoom-logo">
+                            OpinionZoom
+                        </div>
                         <div class="search-box-form">
                             <form id="search-box" action="main/" method="get">
                                 <input class="config-btn" type="button" value="Configurar"/>
@@ -90,6 +104,49 @@
                         </div>
 
                     </div>
+                    <div class="opinionzoom-0-result" v-if="responseStage > 0">
+                        <div class="opinionzoom-logo sample">
+                            OpinionZoom
+                        </div>
+                        <div class="opinionzoom-0-loading" v-if="responseStage === 1">
+                            Extraindo e processando revisões. Isso pode levar alguns instantes...
+                        </div>
+                        <div class="opinionzoom-0-loaded" v-if="responseStage === 2">
+                            <div class="selected-name">
+                                #%textResponse[0][0]%#
+                            </div>
+                            <div class="reviews-found">
+                                <div class="reviews-found-text">
+                                    #%textResponse[0][1]%#
+                                </div>
+                                <div class="reviews-found-amnt">
+                                    #%textResponse[0][2]%#
+                                </div>
+                            </div>
+                            <div class="aspects-extr">
+                                <div class="aspects-extr-text">
+
+                                </div>
+                                <div class="aspects-extr-amnt">
+
+                                </div>
+                                <div class="apects-extr-plots" id="plot">
+                                    <div id="chart-bars" xmlns="http://www.w3.org/2000/svg" class="plot">
+                                    </div>
+                                    <div id="chart-gauge" xmlns="http://www.w3.org/2000/svg" class="plot">
+                                    </div>
+                                    <div id="chart-pie" xmlns="http://www.w3.org/2000/svg" class="plot">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="summary-result" v-for='i in textResponse[0].length + 6'>
+                                #%textResponse[0][i+5]%#
+                            </div>
+
+                        </div>
+                    </div>
+
+
                     <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como usar?'">
                         Instruções para uso do pipeline
                     </div>

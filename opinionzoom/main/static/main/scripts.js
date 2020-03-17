@@ -15,7 +15,7 @@ Vue.component('text-input-component', {
 
 new Vue({
     el: '#app',
-    delimiters: ["[[", "]]"],
+    delimiters: ["#%", "%#"],
     data: {
         currOption: 0,
         options:[
@@ -61,7 +61,8 @@ new Vue({
         ],
         mainPageSelected: 0,    //variavel para controlar opcoes selecionadas(flexivel)
         searchField : '',
-        waitingResponse : false,
+        responseStage : 0,
+        textResponse: [],       //lista contendo respostas de alguma query. Organizada como conveniente
     },
 
     methods: {
@@ -69,6 +70,7 @@ new Vue({
             this.currOption = index
             this.currSubOp = -1
             this.subOpActive = true;
+            this.responseStage = 0;
 
             //verificar antes se a opcao clicada esta ativa(se estiver, desativar)
             if(document.getElementsByClassName('option-box')[index].className === 'option-box active'){
@@ -105,17 +107,47 @@ new Vue({
 
         searchQuery: function(){
             if (!this.waitingResponse){
-                this.waitingResponse = true;
+                this.responseStage = 1;
                 this.$http.get('main/search', {params: {'searchField' : this.searchField}}).then(
                     function(response){
-                        console.log(response)
-                        this.waitingResponse = false;
+                        //segregar dados aqui
+                        this.textResponse = []
+                        this.textResponse.push(response['bodyText'].split("\n"))
+                        this.responseStage = 2;
+                        console.log(this.textResponse[0][3])
+                        this.$nextTick(() =>{   //aguarda a pagina terminar de carregar para modificar dom
+                            chartBars = document.createElement("svg")
+                            chartGauge = document.createElement("svg")
+                            chartPie = document.createElement("svg")
+
+                            chartBars.setAttribute("xmlns","http://www.w3.org/2000/svg")
+                            chartGauge.setAttribute("xmlns","http://www.w3.org/2000/svg")
+                            chartPie.setAttribute("xmlns","http://www.w3.org/2000/svg")
+
+                            chartBars.innerHTML = this.textResponse[0][3]
+                            document.getElementById("chart-bars").appendChild(chartBars)
+
+                            chartGauge.innerHTML = this.textResponse[0][4]
+                            document.getElementById("chart-gauge").appendChild(chartGauge)
+
+                            chartPie.innerHTML = this.textResponse[0][5]
+                            document.getElementById("chart-pie").appendChild(chartPie)
+                        })
+
+
+
                     },
                     function(response){//error
                         console.log("error")
                     }
                 );
             }
+        },
+
+        addPlots: function(){
+            img = new Image();
+            img.src = this.textResponse[0][3];
+            document.getElementById("plot-area").appendChild(img);
         },
     },
 

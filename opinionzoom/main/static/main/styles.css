@@ -147,7 +147,7 @@ input:focus::placeholder {
 .config-btn:hover{
 	transition: 0.2s;
 	background-color: #e5e5e9;
-	
+
 }
 
 textarea{
@@ -214,4 +214,26 @@ textarea{
 	background-color: #f9f9f9;
 	border: none;
   border-radius: 10px;
+}
+
+.plot{
+  width: 30%;
+}
+
+.project-logos{
+	width: 20%;
+	background-color: #07359b;
+	border-right: 8px solid #b5b5b5;
+	font-size: 22px;
+ 	color: white;
+	left: 0;
+	bottom:0;
+	position: fixed;
+	z-index: 1;
+}
+
+.logo-img{
+	vertical-align: bottom;
+	width: 30%;
+	margin-left: 1%;
 }

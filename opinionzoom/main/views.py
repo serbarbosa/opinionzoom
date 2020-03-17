@@ -19,7 +19,7 @@ from sentiment_pipeline import Sentiment_pipeline
 # Create your views here.
 
 def index(request):
-    return render(request, 'main/index.html')
+    return render(request, 'index.html')
 
 def searchQuery(request):
     searchField = request.GET['searchField']
@@ -39,3 +39,5 @@ def searchQuery(request):
     query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", searchField], encoding='utf-8', stdout=subprocess.PIPE)
 #    return JsonResponse({'search' : searchField})
     return HttpResponse(query_process.stdout)
+
+
