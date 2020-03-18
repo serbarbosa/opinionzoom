@@ -34,7 +34,7 @@ new Vue({
 
             {
                 ops: [
-                    'Como usar?'
+                    'Como funciona?'
                 ],
                 id: 1
             },

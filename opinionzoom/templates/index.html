@@ -85,7 +85,18 @@
 
                 <!-- uma nova entrada possivel dependendo da opcao selecionada atualmente -->
                 <div class="inicio" v-if="options[currOption] === 'Início'">
-                    Introdução e explicação sobre o projeto
+                    Ficou mais prático analisar um produto antes de comprá-lo.
+                    Com o OpinionZoom você não precisa mais ficar lendo centenas de comentários
+                    para decidir se o celular que você quer comprar vale a pena mesmo.
+                    Basta informar o nome do produto desejado para o programa buscar as
+                    opiniões sobre ele na web.  Esses dados serão então processados utilizando técnicas
+                    de análise de sentimentos para gerar um resumo das opiniões muito mais prático de se interpretar.
+                    Essa aplicação foi desenvolvida no ICMC-USP como parte do projeto OPINANDO do NILC.
+                    Aqui você encontrará também as ferramentas que forem desenvolvidas pelo projeto OPINANDO
+                    disponíveis para utilização online.
+                    Para entender melhor o funcionamento do OpinionZoom, acesse a aba "OpinionZoom"->"Como funciona?".
+                    Além dessa versão web, existe também a versão em formato de API que pode ser obtida <a href="https://github.com/serbarbosa/sentiment-pipeline" target="_blank">aqui</a>.
+
                 </div>
 
                 <div class="opinionzoom" v-if="options[currOption] === 'OpinionZoom'">
@@ -147,14 +158,161 @@
                     </div>
 
 
-                    <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como usar?'">
-                        Instruções para uso do pipeline
+                    <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como funciona?'">
+                        <h1>Como funciona?</h1>
+                        <div class="intro">
+                            <p>
+                                O processo para se obter os resumos de opinião sobre um produto partindo de um conjunto de revisões
+                                foi denominado de <strong>pipeline de sentimento</strong>. Nesse processo são usadas diversas ferramentas disponibilizadas
+                                 nesse site de forma a refinar e resumir os dados.
+                            </p>
+                        </div>
+
+                        <br>
+                        <br>
+                        <h2>Pipeline de sentimento</h2>
+
+                            <div class="panel">
+                                    <div class="column left">
+                                        <h3 class="panel-title">
+                                            Crawler de revisões
+                                        </h3>
+                                        <p class="panel-text">
+                                            O produto informado será buscado em diversos sites de e-commerces brasileiros
+                                             de onde serão extraídas todas as revisões de usuários que forem encontradas.
+                                        </p>
+                                    </div>
+                                    <div class="column right">
+                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                                    </div>
+                            </div>
+
+                            <div class="panel">
+                                    <div class="column left">
+                                        <h3 class="panel-title">
+                                            Filtragem por qualidade
+                                        </h3>
+                                        <p class="panel-text">
+                                            As revisões extraídas passarão por um filtro de qualidade, que irá analisar a
+                                             formação de sentenças de cada revisão e removerá da base as que aparentarem ter
+                                              menor carga de sentimento.
+                                        </p>
+                                    </div>
+                                    <div class="column right">
+                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                                    </div>
+                            </div>
+
+
+                            <div class="panel">
+                                    <div class="column left">
+                                        <h3 class="panel-title">
+                                            Normalização textual
+                                        </h3>
+                                        <p class="panel-text">
+
+                                            As revisões restantes passarão pelo normalizador Enelvo onde será feita a substituição
+                                             de abreviações usadas na web e a correção de palavras erradas.
+                                        </p>
+                                    </div>
+                                    <div class="column right">
+                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                                    </div>
+                            </div>
+
+
+                            <div class="panel">
+                                    <div class="column left">
+                                        <h3 class="panel-title">
+                                            Filtragem por subjetividade
+                                        </h3>
+                                        <p class="panel-text">
+                                            Após normalizadas, as revisões passam por um filtro de subjetividade que analisará sentença por sentença.
+                                            Aquelas que não forem subjetivas, ou seja, que não puderem ser classificadas como tendo sentimento positivo
+                                             ou negativo, serão removidas.
+                                        </p>
+                                    </div>
+                                    <div class="column right">
+                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                                    </div>
+                            </div>
+
+
+                            <div class="panel">
+                                    <div class="column left">
+                                        <h3 class="panel-title">
+                                           Identificação e classificação de aspectos
+                                        </h3>
+                                        <p class="panel-text">
+
+                                            A próxima consistirá em identificar os aspectos citados nas revisões(um celular, por exemplo, as pessoas
+                                            irão provavelmente falar sobre os aspectos bateria, câmera e tela) e classificar se estão falando bem ou mal
+                                            sobre eles. Nessa etapa são gerados gráficos que permitem visualizar quantas vezes falou-se bem ou mal de
+                                            cada aspecto.
+                                        </p>
+                                    </div>
+                                    <div class="column right">
+                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                                    </div>
+                            </div>
+
+
+                            <div class="panel">
+                                    <div class="column left">
+                                        <h3 class="panel-title">
+                                           Sumarização
+                                        </h3>
+                                        <p class="panel-text">
+
+                                            Na última etapa será gerado um resumo textual sobre as opiniões do produto. O resumo levará em conta
+                                            os aspectos classificados e poderá ser feito usando diferentes métodos. O tipo de sumarizador a ser usado pode ser
+                                            modificado na opção "configuração" antes de iniciar o pipeline de sentimento. Consulte a aba
+                                            "Ferramentas"->"Sumarizador de revisões" para saber mais sobre cada tipo de sumarizador disponível.
+                                        </p>
+                                    </div>
+                                    <div class="column right">
+                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                                    </div>
+                            </div>
+
                     </div>
                 </div>
 
                 <div class="ferramentas" v-if="options[currOption] === 'Ferramentas'">
                     <div class="ferramentas-0" v-if="currSubOp === -1">
-                        Explicação de cada ferramenta disponível
+                        As ferramentas disponibilizadas aqui foram desenvolvidas pelo OPINANDO, um projeto de mineração de opinião para
+                        o português pertencente Núcleo Interinstitucional de Linguística Computacional(NILC).
+                        Abaixo você encontrará uma breve explicação sobre cada ferramenta e sua respectiva referência.
+                        <br>
+                        Normalizador enelvo
+                        <br>
+                        Explicação...
+                        Referência...
+
+                        <br>
+                        Filtro de qualidade de revisão
+                        <br>
+                        Explicação...
+                        Referência...
+
+                        <br>
+                        Filtro de subjetividade de sentenças
+                        <br>
+                        Explicação...
+                        Referência...
+
+                        <br>
+                        Extrator e classificador de aspectos
+                        <br>
+                        Explicação...
+                        Referência...
+
+                        <br>
+                        Sumarizador Opizer
+                        <br>
+                        Explicação...
+                        Referência...
+
                     </div>
                     <div class="ferramentas-1" v-if="subOptions[currOption].ops[currSubOp] === 'Normalizador'">
                         <!-- Entrada para uso do normalizador -->
@@ -175,7 +333,7 @@
 
                     </div>
                     <div class="ferramentas-2" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de qualidade'">
-                        Entrada para uso do filtro de qualidade
+                        Filtro de qualidade de revisão
                         <form class="text-input-form" action="index.html" method="post">
                             <text-input-component
                                 :main-page-selected="mainPageSelected"
@@ -187,7 +345,7 @@
                     </div>
 
                     <div class="ferramentas-3" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de subjetividade'">
-                        Entrada para uso do filtro de subjetividade
+                        Filtro de subjetividade de sentenças
                         <form class="text-input-form" action="index.html" method="post">
                             <text-input-component
                                 :main-page-selected="mainPageSelected"
@@ -198,7 +356,7 @@
                     </div>
 
                     <div class="ferramentas-4" v-if="subOptions[currOption].ops[currSubOp] === 'Extrator e classificador de aspectos'">
-                        Entrada para uso do extrator e classificador de aspectos
+                        Extrator e classificador de aspectos
                         <form class="text-input-form" action="index.html" method="post">
                             <text-input-component
                                 :main-page-selected="mainPageSelected"
@@ -209,7 +367,7 @@
                     </div>
 
                     <div class="ferramentas-5" v-if="subOptions[currOption].ops[currSubOp] === 'Sumarizador de revisões'">
-                        Entrada para uso do sumarizador de revisões
+                        Sumarizador de revisões Opizer
                         <form class="text-input-form" action="index.html" method="post">
                             <text-input-component
                                 :main-page-selected="mainPageSelected"
@@ -222,16 +380,40 @@
 
                 <div class="api" v-if="options[currOption] === 'API'">
                     <div class="api-0" v-if="currSubOp === -1">
-                        texto sobre a API
+                        API
                     </div>
                     <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Documentação'">
+                        API - Documentação
                         Explicação de cada função disponibilizada pela API
                     </div>
                     <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Dependências'">
-                        Programas necessários para o funcionamento da api e um tutorial de obtenção dos mais complicados
+                        API - Dependências
+                        python3
+                        usando pip:
+                        scrapy
+                        selenium
+                        pygal
+                        ntlk
+                            import nltk
+                            nltk.download('stopwords') //possivel de ser removida essa dependencia?
+                            nltk.download('punkt')
+                        sklearn
+                        nlpnet
+                        networkx
+                        enelvo:
+                            cd enelvo
+                            sudo pip install -r requirements.txt
+                            sudo python3 setup.py install #instalar enelvo
+                        cython
+                        svglib
+
                     </div>
                     <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Download'">
-                        link para download da api (github?)
+                        API - Download
+                        A biblioteca sentiment-pipeline contendo métodos para utilização do pipeline de sentimento
+                        ou também de cada ferramenta individualmente encontra-se disponível em meu repositório do github: <a href="https://github.com/serbarbosa/sentiment-pipeline" target="_blank">@serbarbosa</a>
+                        Contribuições serão bem-vindas =)
+                        Veja também o <a href="https://github.com/serbarbosa/opinionzoom" target="_blank">repositório dessa interface web</a>.
                     </div>
                 </div>
 
