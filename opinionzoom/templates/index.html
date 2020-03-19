@@ -1,23 +1,27 @@
-{% load static %}
+{% load static bulma_tags %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>OpinionZoom</title>
-		<!--<link rel="stylesheet" TYPE="text/css" HREF = "styles.css"/>-->
-        <link rel="stylesheet" type="text/css" href="{% static 'main/styles.css' %}">
-        <link href="https://fonts.googleapis.com/css?family=Amatic+SC&display=swap" rel="stylesheet">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OpinonZoom</title>
+    {% block css %}
+    {% font_awesome %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bulma/css/style.min.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC&display=swap" rel="stylesheet">
+    {% endblock css %}
+</head>
 
-    <body>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.common.dev.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script> <!-- usado pra fazer requisicoes http no vue app -->
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.common.dev.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <!-- usado pra fazer requisicoes http no vue app -->
 
-        <!-- template para caixa de insercao de texto -->
-        <script type="text/x-template" id="text-input-template">
+    <!-- template para caixa de insercao de texto -->
+    <script type="text/x-template" id="text-input-template">
             <div class="text-input-box">
                 <div class="text-input-options">
                     <div class="input-option active" v-on:click.prevent='setSelectionOp(0)'>
@@ -39,390 +43,581 @@
             </div>
         </script>
 
+    <div class="main" id="app">
+        <!-- inicio app vue -->
 
-        <div id='app'> <!-- inicio app vue-->
+        <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <div class="navbar-item">
+                    <span class="icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </span>
+                </div>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="headerMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
 
-            <div class="sidenav">
-                <div class="options-list-box">
-                    <div class='options-list' v-for='(op, index) in options'>
-                        <!-- mostrar todas as opcoes -->
-                        <div class='option' >
-                            <div class="option-box"  v-on:click.prevent="changeCurrOp(index)">
-                                <div class="option-text">
-                                    #%op%#
-                                </div>
-                            </div>
-                            <!-- mostrar subopcoes para a opcao selecionada -->
-                            <div class="suboptions-list" v-if='index === currOption && subOpActive'>
-                                <div class="sublist" v-for='(subOp, subIndex) in subOptions[currOption].ops'>
-                                    <div class="suboption" v-on:click.prevent="changeCurrSubOp(subIndex)">
-                                        <div class="suboption-text">
-                                            #%subOp%#
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+            <div id="headerMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item has-dropdown" v-for="(op, index) in options"
+                        v-bind:class="{ 'has-dropdown is-hoverable' : subOptions[index].ops.length}">
+                        <a class="navbar-link is-arrowless" v-on:click.prevent="changeCurrOp(index)">
+                            #%op%#
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" v-for="(subOp, subIndex) in subOptions[index].ops"
+                                v-on:click.prevent="updateMenuOptions(index, subIndex)">
+                                #%subOp%#
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+        </nav>
 
-            <div class="project-logos">
-                <a href="https://sites.google.com/icmc.usp.br/opinando" target="_blank" class="logo">
-                    <img src="{%static 'assets/opinando.png'%}" alt="OPINANDO" class="logo-img">
-                </a>
-                <a href="http://www.nilc.icmc.usp.br/nilc/index.php" target="_blank" class="logo">
-                    <img src="{%static 'assets/nilc.png'%}" alt="ICMC" class="logo-img">
-                </a>
-                <a href="https://www.icmc.usp.br/" target="_blank" class="logo">
-                    <img src="{%static 'assets/icmc.png'%}" alt="NILC" class="logo-img">
-                </a>
+        <div class="section">
+            <!-- uma nova entrada possivel dependendo da opcao selecionada atualmente -->
+            <div class="container" v-if="options[currOption] === 'Início'">
+                Ficou mais prático analisar um produto antes de comprá-lo.
+                Com o OpinionZoom você não precisa mais ficar lendo centenas de comentários
+                para decidir se o celular que você quer comprar vale a pena mesmo.
+                Basta informar o nome do produto desejado para o programa buscar as
+                opiniões sobre ele na web. Esses dados serão então processados utilizando técnicas
+                de análise de sentimentos para gerar um resumo das opiniões muito mais prático de se interpretar.
+                Essa aplicação foi desenvolvida no ICMC-USP como parte do projeto OPINANDO do NILC.
+                Aqui você encontrará também as ferramentas que forem desenvolvidas pelo projeto OPINANDO
+                disponíveis para utilização online.
+                Para entender melhor o funcionamento do OpinionZoom, acesse a aba "OpinionZoom"->"Como funciona?".
+                Além dessa versão web, existe também a versão em formato de API que pode ser obtida <a
+                    href="https://github.com/serbarbosa/sentiment-pipeline" target="_blank">aqui</a>.
+
             </div>
 
+            <!-- Formulario de busca -->
+            <div class="container has-text-centered" v-if="options[currOption] === 'OpinionZoom'">
+                <div class="container" v-if="currSubOp === -1 && responseStage === 0">
+                    <div class="opinionzoom-logo">
+                        OpinionZoom
+                    </div>
+                    <form action="main/" method="get">
+                        <div class="field is-grouped" id="search-form">
+                            <div class="control">
+                                <button class="button is-light">Configurar</button>
+                            </div>
+                            <div class="control">
+                                <input class="input" id="search-input" type="text" maxlength="100"
+                                    placeholder="Obter revisões" />
+                            </div>
+                            <div class="control">
+                                <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}"
+                                    v-on:click.prevent="searchQuery()" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-            <div class="main">
+            <!-- Resultados -->
+            <div class="opinionzoom-0-result" v-if="responseStage > 0">
+                <div class="opinionzoom-logo sample">
+                    OpinionZoom
+                </div>
+                <div class="opinionzoom-0-loading" v-if="responseStage === 1">
+                    Extraindo e processando revisões. Isso pode levar alguns instantes...
+                </div>
+                <div class="opinionzoom-0-loaded" v-if="responseStage === 2">
+                    <div class="selected-name">
+                        #%textResponse[0][0]%#
+                    </div>
+                    <div class="reviews-found">
+                        <div class="reviews-found-text">
+                            #%textResponse[0][1]%#
+                        </div>
+                        <div class="reviews-found-amnt">
+                            #%textResponse[0][2]%#
+                        </div>
+                    </div>
+                    <div class="aspects-extr">
+                        <div class="aspects-extr-text">
+                        </div>
+                        <div class="aspects-extr-amnt">
+                        </div>
+                        <div class="apects-extr-plots" id="plot">
+                            <div id="chart-bars" xmlns="http://www.w3.org/2000/svg" class="plot">
+                            </div>
+                            <div id="chart-gauge" xmlns="http://www.w3.org/2000/svg" class="plot">
+                            </div>
+                            <div id="chart-pie" xmlns="http://www.w3.org/2000/svg" class="plot">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-result" v-for='i in textResponse[0].length + 6'>
+                        #%textResponse[0][i+5]%#
+                    </div>
+                </div>
+            </div>
 
-                <!-- uma nova entrada possivel dependendo da opcao selecionada atualmente -->
-                <div class="inicio" v-if="options[currOption] === 'Início'">
-                    Ficou mais prático analisar um produto antes de comprá-lo.
-                    Com o OpinionZoom você não precisa mais ficar lendo centenas de comentários
-                    para decidir se o celular que você quer comprar vale a pena mesmo.
-                    Basta informar o nome do produto desejado para o programa buscar as
-                    opiniões sobre ele na web.  Esses dados serão então processados utilizando técnicas
-                    de análise de sentimentos para gerar um resumo das opiniões muito mais prático de se interpretar.
-                    Essa aplicação foi desenvolvida no ICMC-USP como parte do projeto OPINANDO do NILC.
-                    Aqui você encontrará também as ferramentas que forem desenvolvidas pelo projeto OPINANDO
-                    disponíveis para utilização online.
-                    Para entender melhor o funcionamento do OpinionZoom, acesse a aba "OpinionZoom"->"Como funciona?".
-                    Além dessa versão web, existe também a versão em formato de API que pode ser obtida <a href="https://github.com/serbarbosa/sentiment-pipeline" target="_blank">aqui</a>.
-
+            <!-- Como funciona -->
+            <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como funciona?'">
+                <h1 class="title">Como funciona?</h1>
+                <div class="container">
+                    <p>
+                        O processo para se obter os resumos de opinião sobre um produto partindo de um conjunto de
+                        revisões
+                        foi denominado de <strong>pipeline de sentimento</strong>. Nesse processo são usadas diversas
+                        ferramentas disponibilizadas
+                        nesse site de forma a refinar e resumir os dados.
+                    </p>
                 </div>
 
-                <div class="opinionzoom" v-if="options[currOption] === 'OpinionZoom'">
-
-
-                    <div class="opinionzoom-0" v-if="currSubOp === -1 && responseStage === 0">
-                        <div class="opinionzoom-logo">
-                            OpinionZoom
-                        </div>
-                        <div class="search-box-form">
-                            <form id="search-box" action="main/" method="get">
-                                <input class="config-btn" type="button" value="Configurar"/>
-                                <input id="search-input" type="text" maxlength="100" placeholder="Obter revisões" v-model="searchField"/>
-                                <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}" v-on:click.prevent="searchQuery()" />
-                            </form>
-                        </div>
-
-                    </div>
-                    <div class="opinionzoom-0-result" v-if="responseStage > 0">
-                        <div class="opinionzoom-logo sample">
-                            OpinionZoom
-                        </div>
-                        <div class="opinionzoom-0-loading" v-if="responseStage === 1">
-                            Extraindo e processando revisões. Isso pode levar alguns instantes...
-                        </div>
-                        <div class="opinionzoom-0-loaded" v-if="responseStage === 2">
-                            <div class="selected-name">
-                                #%textResponse[0][0]%#
-                            </div>
-                            <div class="reviews-found">
-                                <div class="reviews-found-text">
-                                    #%textResponse[0][1]%#
-                                </div>
-                                <div class="reviews-found-amnt">
-                                    #%textResponse[0][2]%#
-                                </div>
-                            </div>
-                            <div class="aspects-extr">
-                                <div class="aspects-extr-text">
-
-                                </div>
-                                <div class="aspects-extr-amnt">
-
-                                </div>
-                                <div class="apects-extr-plots" id="plot">
-                                    <div id="chart-bars" xmlns="http://www.w3.org/2000/svg" class="plot">
-                                    </div>
-                                    <div id="chart-gauge" xmlns="http://www.w3.org/2000/svg" class="plot">
-                                    </div>
-                                    <div id="chart-pie" xmlns="http://www.w3.org/2000/svg" class="plot">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="summary-result" v-for='i in textResponse[0].length + 6'>
-                                #%textResponse[0][i+5]%#
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como funciona?'">
-                        <h1>Como funciona?</h1>
-                        <div class="intro">
-                            <p>
-                                O processo para se obter os resumos de opinião sobre um produto partindo de um conjunto de revisões
-                                foi denominado de <strong>pipeline de sentimento</strong>. Nesse processo são usadas diversas ferramentas disponibilizadas
-                                 nesse site de forma a refinar e resumir os dados.
-                            </p>
-                        </div>
-
-                        <br>
-                        <br>
-                        <h2>Pipeline de sentimento</h2>
-
-                            <div class="panel">
-                                    <div class="column left">
-                                        <h3 class="panel-title">
+                <h2 class="subtitle">Pipeline de sentimento</h2>
+                <div class="container">
+                    <div class="tile is-ancestor">
+                        <div class="tile is-vertical">
+                            <div class="tile is-parent">
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
                                             Crawler de revisões
-                                        </h3>
-                                        <p class="panel-text">
-                                            O produto informado será buscado em diversos sites de e-commerces brasileiros
-                                             de onde serão extraídas todas as revisões de usuários que forem encontradas.
                                         </p>
+                                        <div class="card-header-icon">
+                                            <img class="icon" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            O produto informado será buscado em diversos sites de e-commerces
+                                            brasileiros de onde
+                                            serão extraídas todas as revisões de usuários que forem encontradas.
+                                        </div>
                                     </div>
-                                    <div class="column right">
-                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
-                                    </div>
-                            </div>
-
-                            <div class="panel">
-                                    <div class="column left">
-                                        <h3 class="panel-title">
+                                </div>
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
                                             Filtragem por qualidade
-                                        </h3>
-                                        <p class="panel-text">
-                                            As revisões extraídas passarão por um filtro de qualidade, que irá analisar a
-                                             formação de sentenças de cada revisão e removerá da base as que aparentarem ter
-                                              menor carga de sentimento.
                                         </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-filter"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            As revisões extraídas passarão por um filtro de qualidade, que irá analisar
+                                            a formaçao
+                                            de sentençcas de cada revisão e removerá da base as que aparentarem ter
+                                            menor carga de
+                                            sentimento.
+                                        </div>
                                     </div>
-                                    <div class="column right">
-                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
-                                    </div>
-                            </div>
-
-
-                            <div class="panel">
-                                    <div class="column left">
-                                        <h3 class="panel-title">
+                                </div>
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
                                             Normalização textual
-                                        </h3>
-                                        <p class="panel-text">
-
-                                            As revisões restantes passarão pelo normalizador Enelvo onde será feita a substituição
-                                             de abreviações usadas na web e a correção de palavras erradas.
                                         </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-magic"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            As revisões restantes passarão pelo normalizador Enelvo onde será feita a
+                                            substituição
+                                            de abreviações usadas na web e a correção de palavras erradas.
+                                        </div>
                                     </div>
-                                    <div class="column right">
-                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
-                                    </div>
+                                </div>
                             </div>
-
-
-                            <div class="panel">
-                                    <div class="column left">
-                                        <h3 class="panel-title">
+                            <div class="tile is-parent">
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
                                             Filtragem por subjetividade
-                                        </h3>
-                                        <p class="panel-text">
-                                            Após normalizadas, as revisões passam por um filtro de subjetividade que analisará sentença por sentença.
-                                            Aquelas que não forem subjetivas, ou seja, que não puderem ser classificadas como tendo sentimento positivo
-                                             ou negativo, serão removidas.
                                         </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-filter"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            Após normalizadas, as revisões passam por um filtro de subjetividade que
+                                            analisará
+                                            sentença por sentença. Aquelas que não forem subjetivas, ou seja, que não
+                                            puderem ser
+                                            classificadas como tendo sentimento positivo ou negativo, serão removidas.
+                                        </div>
                                     </div>
-                                    <div class="column right">
-                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
-                                    </div>
-                            </div>
-
-
-                            <div class="panel">
-                                    <div class="column left">
-                                        <h3 class="panel-title">
-                                           Identificação e classificação de aspectos
-                                        </h3>
-                                        <p class="panel-text">
-
-                                            A próxima consistirá em identificar os aspectos citados nas revisões(um celular, por exemplo, as pessoas
-                                            irão provavelmente falar sobre os aspectos bateria, câmera e tela) e classificar se estão falando bem ou mal
-                                            sobre eles. Nessa etapa são gerados gráficos que permitem visualizar quantas vezes falou-se bem ou mal de
-                                            cada aspecto.
+                                </div>
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            Identificação e classificação de aspectos
                                         </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            A próxima consistirá em identificar os aspectos citados nas revisões(um
+                                            celular, por
+                                            exemplo, as pessoas irão provavelmente falar sobre os aspectos bateria,
+                                            câmera e tela) e
+                                            classificar se estão falando bem ou mal sobre eles. Nessa etapa são gerados
+                                            gráficos que
+                                            permitem visualizar quantas vezes falou-se bem ou mal de cada aspecto.
+                                        </div>
                                     </div>
-                                    <div class="column right">
-                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
-                                    </div>
-                            </div>
-
-
-                            <div class="panel">
-                                    <div class="column left">
-                                        <h3 class="panel-title">
-                                           Sumarização
-                                        </h3>
-                                        <p class="panel-text">
-
-                                            Na última etapa será gerado um resumo textual sobre as opiniões do produto. O resumo levará em conta
-                                            os aspectos classificados e poderá ser feito usando diferentes métodos. O tipo de sumarizador a ser usado pode ser
-                                            modificado na opção "configuração" antes de iniciar o pipeline de sentimento. Consulte a aba
-                                            "Ferramentas"->"Sumarizador de revisões" para saber mais sobre cada tipo de sumarizador disponível.
+                                </div>
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            Sumarização
                                         </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            Na última etapa será gerado um resumo textual sobre as opiniões do produto.
+                                            O resumo
+                                            levará em conta os aspectos classificados e poderá ser feito usando
+                                            diferentes métodos.
+                                            O tipo de sumarizador a ser usado pode ser modificado na opção
+                                            "configuração" antes de
+                                            iniciar o pipeline de sentimento. Consulte a aba "Ferramentas"->"Sumarizador
+                                            de
+                                            revisões" para saber mais sobre cada tipo de sumarizador disponível.
+                                        </div>
                                     </div>
-                                    <div class="column right">
-                                        <img class="panel-img" src="{%static 'assets/crawler.png'%}" alt="web crawler">
-                                    </div>
+                                </div>
                             </div>
-
-                    </div>
-                </div>
-
-                <div class="ferramentas" v-if="options[currOption] === 'Ferramentas'">
-                    <div class="ferramentas-0" v-if="currSubOp === -1">
-                        As ferramentas disponibilizadas aqui foram desenvolvidas pelo OPINANDO, um projeto de mineração de opinião para
-                        o português pertencente Núcleo Interinstitucional de Linguística Computacional(NILC).
-                        Abaixo você encontrará uma breve explicação sobre cada ferramenta e sua respectiva referência.
-                        <br>
-                        Normalizador enelvo
-                        <br>
-                        Explicação...
-                        Referência...
-
-                        <br>
-                        Filtro de qualidade de revisão
-                        <br>
-                        Explicação...
-                        Referência...
-
-                        <br>
-                        Filtro de subjetividade de sentenças
-                        <br>
-                        Explicação...
-                        Referência...
-
-                        <br>
-                        Extrator e classificador de aspectos
-                        <br>
-                        Explicação...
-                        Referência...
-
-                        <br>
-                        Sumarizador Opizer
-                        <br>
-                        Explicação...
-                        Referência...
-
-                    </div>
-                    <div class="ferramentas-1" v-if="subOptions[currOption].ops[currSubOp] === 'Normalizador'">
-                        <!-- Entrada para uso do normalizador -->
-                        <div id="enelvo-header">
-                            Normalizador Enelvo
                         </div>
-
-                        <!-- caixa de input de texto ou de arquivo -->
-                        <form class="text-input-form" action="index.html" method="post">
-                            <text-input-component
-                                :main-page-selected="mainPageSelected"
-                                v-model="mainPageSelected"
-                                ></text-input-component>
-
-                            <input id="normalize-btn" type="button" name="" value="Iniciar">
-                        </form>
-
-
-                    </div>
-                    <div class="ferramentas-2" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de qualidade'">
-                        Filtro de qualidade de revisão
-                        <form class="text-input-form" action="index.html" method="post">
-                            <text-input-component
-                                :main-page-selected="mainPageSelected"
-                                v-model="mainPageSelected"
-                                ></text-input-component>
-
-                        </form>
-
-                    </div>
-
-                    <div class="ferramentas-3" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de subjetividade'">
-                        Filtro de subjetividade de sentenças
-                        <form class="text-input-form" action="index.html" method="post">
-                            <text-input-component
-                                :main-page-selected="mainPageSelected"
-                                v-model="mainPageSelected"
-                                ></text-input-component>
-
-                        </form>
-                    </div>
-
-                    <div class="ferramentas-4" v-if="subOptions[currOption].ops[currSubOp] === 'Extrator e classificador de aspectos'">
-                        Extrator e classificador de aspectos
-                        <form class="text-input-form" action="index.html" method="post">
-                            <text-input-component
-                                :main-page-selected="mainPageSelected"
-                                v-model="mainPageSelected"
-                                ></text-input-component>
-
-                        </form>
-                    </div>
-
-                    <div class="ferramentas-5" v-if="subOptions[currOption].ops[currSubOp] === 'Sumarizador de revisões'">
-                        Sumarizador de revisões Opizer
-                        <form class="text-input-form" action="index.html" method="post">
-                            <text-input-component
-                                :main-page-selected="mainPageSelected"
-                                v-model="mainPageSelected"
-                                ></text-input-component>
-
-                        </form>
                     </div>
                 </div>
-
-                <div class="api" v-if="options[currOption] === 'API'">
-                    <div class="api-0" v-if="currSubOp === -1">
-                        API
-                    </div>
-                    <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Documentação'">
-                        API - Documentação
-                        Explicação de cada função disponibilizada pela API
-                    </div>
-                    <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Dependências'">
-                        API - Dependências
-                        python3
-                        usando pip:
-                        scrapy
-                        selenium
-                        pygal
-                        ntlk
-                            import nltk
-                            nltk.download('stopwords') //possivel de ser removida essa dependencia?
-                            nltk.download('punkt')
-                        sklearn
-                        nlpnet
-                        networkx
-                        enelvo:
-                            cd enelvo
-                            sudo pip install -r requirements.txt
-                            sudo python3 setup.py install #instalar enelvo
-                        cython
-                        svglib
-
-                    </div>
-                    <div class="api-1" v-if="subOptions[currOption].ops[currSubOp] === 'Download'">
-                        API - Download
-                        A biblioteca sentiment-pipeline contendo métodos para utilização do pipeline de sentimento
-                        ou também de cada ferramenta individualmente encontra-se disponível em meu repositório do github: <a href="https://github.com/serbarbosa/sentiment-pipeline" target="_blank">@serbarbosa</a>
-                        Contribuições serão bem-vindas =)
-                        Veja também o <a href="https://github.com/serbarbosa/opinionzoom" target="_blank">repositório dessa interface web</a>.
-                    </div>
-                </div>
-
             </div>
 
+            <!-- Ferramentas -->
+            <div class="container" v-if="options[currOption] === 'Ferramentas'">
+                <div class="container" v-if="currSubOp === -1">
+                    <h1 class="title">
+                        Ferramentas
+                    </h1>
+                    <p class="content">
+                        As ferramentas disponibilizadas aqui foram desenvolvidas pelo OPINANDO, um projeto de mineração
+                        de opinião para
+                        o português pertencente Núcleo Interinstitucional de Linguística Computacional (NILC).
+                        Abaixo você encontrará uma breve explicação sobre cada ferramenta e sua respectiva referência.
+                    </p>
+                    <div class="tile is-ancestor">
+                        <div class="tile is-vertical">
+                            <div class="tile is-parent">
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            Normalizador enelvo
+                                        </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-magic"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            Explicação...
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-footer-item">
+                                            Referência...
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            Filtro de qualidade de revisão
+                                        </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-filter"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            Explicação...
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-footer-item">
+                                            Referência...
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            Filtro de subjetividade de sentenças
+                                        </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-filter"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            Explicação...
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-footer-item">
+                                            Referência...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tile is-parent">
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            Extrator e classificador de aspectos
+                                        </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            Explicação...
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-footer-item">
+                                            Referência...
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile is-child card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            Sumarizador Opizer
+                                        </p>
+                                        <div class="card-header-icon">
+                                            <span class="icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </span>
+                                        </div>
+                                    </header>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            Explicação...
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-footer-item">
+                                            Referência...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enelvo -->
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Normalizador'">
+                    <!-- Entrada para uso do normalizador -->
+                    <div id="enelvo-header">
+                        <h1 class="title">
+                            Normalizador Enelvo
+                        </h1>
+                    </div>
+
+                    <!-- caixa de input de texto ou de arquivo -->
+                    <form class="text-input-form" action="index.html" method="post">
+                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                        </text-input-component>
+
+                        <input id="normalize-btn" type="button" name="" value="Iniciar">
+                    </form>
+                </div>
+
+                <!-- Filtro de qualidade -->
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de qualidade'">
+                    <h1 class="title">
+                        Filtro de qualidade de revisão
+                    </h1>
+                    <form class="text-input-form" action="index.html" method="post">
+                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                        </text-input-component>
+                    </form>
+                </div>
+
+                <!-- Filtro de subjetividade -->
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de subjetividade'">
+                    <h1 class="title">
+                        Filtro de subjetividade de sentenças
+                    </h1>
+                    <form class="text-input-form" action="index.html" method="post">
+                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                        </text-input-component>
+                    </form>
+                </div>
+
+                <!-- Aspectos -->
+                <div class="container"
+                    v-if="subOptions[currOption].ops[currSubOp] === 'Extrator e classificador de aspectos'">
+                    <h1 class="title">
+                        Extrator e classificador de aspectos
+                    </h1>
+                    <form class="text-input-form" action="index.html" method="post">
+                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                        </text-input-component>
+                    </form>
+                </div>
+
+                <!-- Opizer -->
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Sumarizador de revisões'">
+                    <h1 class="title">
+                        Sumarizador de revisões Opizer
+                    </h1>
+                    <form class="text-input-form" action="index.html" method="post">
+                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                        </text-input-component>
+                    </form>
+                </div>
+            </div>
         </div>
 
-	<script type="text/javascript" src="scripts.js"></script>
-	<script type="text/javascript" src="{%static 'main/scripts.js'%}"></script>
-    </body>
+        <!-- API -->
+        <div class="container" v-if="options[currOption] === 'API'">
+            <div class="container" v-if="currSubOp === -1">
+                API
+            </div>
+
+            <!-- Documentacao -->
+            <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Documentação'">
+                <h1 class="title">
+                    Documentação
+                </h1>
+                <div class="content">
+                    Explicação de cada função disponibilizada pela API
+                </div>
+            </div>
+
+            <!-- Dependencias -->
+            <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Dependências'">
+                <h1 class="title">
+                    Dependências
+                </h1>
+
+                <div class="content">
+                    <ul>
+                        <li>python3</li>
+                        <li>usando pip:
+                            <ul>
+                                <li>scrapy</li>
+                                <li>selenium</li>
+                                <li>pygal</li>
+                                <li>nltk
+                                    <ul class="unstyled">
+                                        <li>import nltk</li>
+                                        <li>nltk.download('stopwords') //possivel de ser removida essa dependencia?</li>
+                                        <li>nltk.download('punkt')</li>
+                                    </ul>
+                                </li>
+                                <li>sklearn</li>
+                                <li>nlpnet</li>
+                                <li>networkx</li>
+                                <li>enelvo:
+                                    <ul class="unstyled">
+                                        <li>cd enelvo</li>
+                                        <li>sudo pip install -r requirements.txt</li>
+                                        <li>sudo pyhthon3 setup.py install #instalar enelvo</li>
+                                    </ul>
+                                </li>
+                                <li>cython</li>
+                                <li>svglib</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Download -->
+            <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Download'">
+                <h1 class="title">
+                    Download
+                </h1>
+
+                <div class="content">
+                    <p>
+                        A biblioteca sentiment-pipeline contendo métodos para utilização do pipeline de sentimento ou
+                        também
+                        de cada ferramenta individualmente encontra-se disponível em meu repositório do github: <a
+                            href="https://github.com/serbarbosa/sentiment-pipeline" target="_blank">@serbarbosa</a>.
+                    </p>
+                    <p>
+                        Contribuições serão bem-vindas =)
+                    </p>
+                    <p>
+                        Veja também o <a href="https://github.com/serbarbosa/opinionzoom" target="_blank">repositório
+                            dessa interface web</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <div class="columns">
+                    <div class="column">
+                        <figure class="image is-128x128 is-inline-block">
+                            <a href="https://sites.google.com/icmc.usp.br/opinando" target="_blank">
+                                <img src="{%static 'assets/opinando.png'%}" alt="OPINANDO">
+                            </a>
+                        </figure>
+                    </div>
+                    <div class="column">
+                        <figure class="image is-128x128 is-inline-block">
+                            <a href="http://www.nilc.icmc.usp.br/nilc/index.php" target="_blank">
+                                <img src="{%static 'assets/nilc.png'%}" alt="NILC">
+                            </a>
+                        </figure>
+                    </div>
+                    <div class="column">
+                        <figure class="image is-128x128 is-inline-block">
+                            <a href="https://www.icmc.usp.br/" target="_blank">
+                                <img src="{%static 'assets/icmc_dark.png'%}" alt="ICMC">
+                            </a>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script type="text/javascript" src="{%static 'main/scripts.js'%}"></script>
+</body>
 
 </html>

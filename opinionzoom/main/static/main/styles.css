@@ -1,5 +1,4 @@
 body{
-	background-color: #eeeeee;
 	font-family: sans-serif;
 }
 
@@ -85,10 +84,13 @@ body{
 
 /* -------------------- main pages styles -------------------- */
 .main{
-	height: 100%;
-	width: 79%;
-	margin-left: 21%;
-	padding: 3px 3px 3px;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.section {
+    flex: 1;
 }
 
 .opinionzoom-logo{
@@ -97,7 +99,6 @@ body{
 	font-weight: bold;
 	color: #2f54a2;
 	text-align: center;
-	margin-top: 10%;
 }
 
 .search-box-form{
@@ -118,16 +119,19 @@ body{
   border: 2px solid #c3c3c3;
 	font-size: 18px;
 	text-indent: 15px;
-	margin-right: 25px;
 }
 
 input:focus::placeholder {
   color: transparent;
 }
 
+#search-form{
+    justify-content: center;
+}
+
 #search-submit{
 	max-width: 30px;
-	-webkit-transform: translateY(25%);
+	-webkit-transform: translateY(10%);
   transition: 0.2s;
 }
 

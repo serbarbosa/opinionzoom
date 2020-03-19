@@ -71,38 +71,10 @@ new Vue({
             this.currSubOp = -1
             this.subOpActive = true;
             this.responseStage = 0;
-
-            //verificar antes se a opcao clicada esta ativa(se estiver, desativar)
-            if(document.getElementsByClassName('option-box')[index].className === 'option-box active'){
-                document.getElementsByClassName('option-box')[index].className = 'option-box'
-                this.subOpActive = false;
-                return
-            }
-
-            //controla className para fazer highlight na opcao selecionada
-            var prevElem = document.getElementsByClassName('option-box active')
-            if(prevElem.length != 0)
-                prevElem[0].className = 'option-box'
-            document.getElementsByClassName('option-box')[index].className += ' active'
         },
 
         changeCurrSubOp: function(subOpIndex){
             this.currSubOp = subOpIndex
-
-            //controla className para fazer highlight na subopcao selecionada
-            var prevElem = document.getElementsByClassName('suboption active')
-            if(prevElem.length != 0)
-                prevElem[0].className = 'suboption'
-            document.getElementsByClassName('suboption')[subOpIndex].className += ' active'
-
-            //resetando opcoes de input das ferramentas
-            this.mainPageSelected = 0;
-            var prevOp = document.getElementsByClassName('input-option active')
-            if(prevOp.length != 0)
-                prevOp[0].className = 'input-option'
-            var currOp = document.getElementsByClassName('input-option')
-            if(currOp.length != 0)
-                currOp[0].className += ' active'
         },
 
         searchQuery: function(){
@@ -149,6 +121,38 @@ new Vue({
             img.src = this.textResponse[0][3];
             document.getElementById("plot-area").appendChild(img);
         },
+        
+        updateMenuOptions: function(index, subIndex){
+            this.changeCurrOp(index);
+            this.changeCurrSubOp(subIndex);
+        }
     },
 
 })
+
+// Codigo para funcionar menu burger em mobile
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+  
+    // Check if there are any navbar burgers
+    if ($navbarBurgers.length > 0) {
+  
+      // Add a click event on each of them
+      $navbarBurgers.forEach( el => {
+        el.addEventListener('click', () => {
+  
+          // Get the target from the "data-target" attribute
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+  
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+  
+        });
+      });
+    }
+  
+  });
