@@ -1,86 +1,3 @@
-body{
-	font-family: sans-serif;
-}
-
-/* -------------------- sidebar styles -------------------- */
-.sidenav {
-	height: 100%;
-	width: 20%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: #07359b;
-	overflow-x: hidden;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	margin-left: 0px;
-	border-right: 8px solid #b5b5b5;
-	font-size: 22px;
- 	color: white;
-}
-
-/* --------------- options style --------------- */
-.option-box{
-	transition: 0.5s;
- 	padding: 4% 2% 4%;
-	border-top: 1px solid #4971c1;
- 	border-bottom: 1px solid #739df1;
-}
-
-.option-box:hover{
-	transition: 0.5s;
-	padding: 4% 5% 4%;
-}
-
-.option-box.active{
-	background-color: #dde1d8;
-	color: black;
- 	padding: 4% 5% 4%;
-}
-
-.option-text{
-	margin-left: 2%;
-	margin-top: 1%;
-	margin-bottom: 1%;
-}
-
-.option :hover{
-   cursor: pointer;
-}
-
-/* --------------- suboptions style --------------- */
-.suboption{
-	font-size: 20px;
-	transition: 0.5s;
-	padding: 4px 0px 4px;
-}
-
-.suboption:hover{
-	transition: 0.5s;
-	padding: 4px 8px 4px;
-}
-
-.suboption.active{
- 	color: black;
-	background-color: #3b75e6;
-	padding: 4px 8px 4px;
-}
-
-.suboption-text{
-	margin-left: 10%;
-	margin-top: 2%;
-	margin-bottom: 2%;
-}
-
-.suboptions-list{
-	background-color: #739df1;
-	float: left;
-	width: 100%;
-	height: 100%;
-	border-bottom: 15px solid #07359b;
-}
 
 /* -------------------- main pages styles -------------------- */
 .main{
@@ -99,6 +16,10 @@ body{
 	font-weight: bold;
 	color: #2f54a2;
 	text-align: center;
+}
+
+.opinionzoom-logo.smaller-logo{
+  font-size: 100px;
 }
 
 .search-box-form{
@@ -139,21 +60,7 @@ input:focus::placeholder {
 	background-color: #e7eede
 }
 
-.config-btn{
-	width:120px;
-	height: 35px;
-	background-color: #f9f9f9;
-	font-size: 18px;
-  border-radius: 8px;
-	border: 0px;
-	margin-right: 10px;
-}
 
-.config-btn:hover{
-	transition: 0.2s;
-	background-color: #e5e5e9;
-
-}
 
 textarea{
 	resize: none;
@@ -221,41 +128,11 @@ textarea{
   border-radius: 10px;
 }
 
-.plot{
-  width: 30%;
-}
-
-.project-logos{
-	width: 20%;
-	background-color: #07359b;
-	border-right: 8px solid #b5b5b5;
-	font-size: 22px;
- 	color: white;
-	left: 0;
-	bottom:0;
-	position: fixed;
-	z-index: 1;
-}
-
-.logo-img{
-	vertical-align: bottom;
-	width: 30%;
-	margin-left: 1%;
-}
-
 h1, h2, h3{
 	font-weight: bold;
 	text-align: center;
 	font-size: 40px;
 	color: #0c5998;
-}
-
-.intro{
-	text-align: center;
-	font-size: 20px;
-	color: #444444;
-	margin-left: 10%;
-	margin-right: 10%;
 }
 
 h2{
@@ -266,56 +143,9 @@ h3{
   font-size: 28px;	
 }
 
-.panels{
+/*-------- chart styles --------*/
+.box.is-plot-area{
+	width: 70%;
 	margin-left: 15%;
 	margin-right: 15%;
-	
-}
-
-.panel{
-	border: 4px solid #cccccc;
-	border-radius: 10px;
-	height: 270px;
-	margin-bottom: 20px;
-	display: flex;
-}
-
-.panel-title{
-	text-align: left;
-}
-
-.column{
-  float: left;
-}
-
-@media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-  }
-}
-
-.left{
-	flex: 75%;
-  text-align: left;
-  margin-left: 50px
-}
-
-.right{
-  flex: 25%;
-	float: right;
-}
-
-.panel-img{
-	width: 180px;
-	float: right;
-  padding: 45px 50px;
-}
-
-.panel-text{
-	font-size: 20px;
-	color: #444444;
-}
-
-.panel:after{
-	clear: both;
 }

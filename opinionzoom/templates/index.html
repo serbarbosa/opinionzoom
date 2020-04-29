@@ -18,6 +18,7 @@
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.common.dev.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <!-- usado pra fazer requisicoes http no vue app -->
 
     <!-- template para caixa de insercao de texto -->
@@ -81,6 +82,9 @@
         <div class="section">
             <!-- uma nova entrada possivel dependendo da opcao selecionada atualmente -->
             <div class="container" v-if="options[currOption] === 'Início'">
+                <div class="opinionzoom-logo smaller-logo">
+                    Opinionzoom
+                </div>
                 Ficou mais prático analisar um produto antes de comprá-lo.
                 Com o OpinionZoom você não precisa mais ficar lendo centenas de comentários
                 para decidir se o celular que você quer comprar vale a pena mesmo.
@@ -109,7 +113,7 @@
                             </div>
                             <div class="control">
                                 <input class="input" id="search-input" type="text" maxlength="100"
-                                    placeholder="Obter revisões" />
+                                    placeholder="Obter revisões" v-model="searchField"/>
                             </div>
                             <div class="control">
                                 <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}"
@@ -122,41 +126,56 @@
 
             <!-- Resultados -->
             <div class="opinionzoom-0-result" v-if="responseStage > 0">
-                <div class="opinionzoom-logo sample">
-                    OpinionZoom
-                </div>
-                <div class="opinionzoom-0-loading" v-if="responseStage === 1">
-                    Extraindo e processando revisões. Isso pode levar alguns instantes...
+
+                <div class="box content-h2" v-if="responseStage === 1">
+                    <div class="content has-text-centered">
+                        Resgatando e processando revisões para <strong>#%searchField%#</strong>...
+                    </div>
+                    <progress class="progress is-info" max="5">60%</progress>
                 </div>
                 <div class="opinionzoom-0-loaded" v-if="responseStage === 2">
-                    <div class="selected-name">
-                        #%textResponse[0][0]%#
+                    <div class="content is-medium">
+                        Foram processadas <strong>#%textResponse[2]%#</strong> revisões para <strong>#%textResponse[0]%#</strong>.
                     </div>
-                    <div class="reviews-found">
-                        <div class="reviews-found-text">
-                            #%textResponse[0][1]%#
-                        </div>
-                        <div class="reviews-found-amnt">
-                            #%textResponse[0][2]%#
-                        </div>
-                    </div>
-                    <div class="aspects-extr">
-                        <div class="aspects-extr-text">
-                        </div>
-                        <div class="aspects-extr-amnt">
-                        </div>
-                        <div class="apects-extr-plots" id="plot">
-                            <div id="chart-bars" xmlns="http://www.w3.org/2000/svg" class="plot">
-                            </div>
-                            <div id="chart-gauge" xmlns="http://www.w3.org/2000/svg" class="plot">
-                            </div>
-                            <div id="chart-pie" xmlns="http://www.w3.org/2000/svg" class="plot">
+
+                    <!--panel para escolha e plotagem do grafico-->
+                    <article class="panel">
+                        <p class="panel-heading has-text-centered">
+                            <strong>Classificação de Aspectos</strong>
+                        </p>
+                        <p class="panel-tabs">
+                            <a class="panel-tab-op is-active is-medium">Barras</a>
+                            <a class="panel-tab-op is-medium">Donut</a>
+                            <a class="panel-tab-op is-medium">Geral</a>
+                        </p>
+                        <div class="panel-block">
+                            <div class="box is-plot-area">
+                                <canvas id="aspects-chart"></canvas>
                             </div>
                         </div>
-                    </div>
-                    <div class="summary-result" v-for='i in textResponse[0].length + 6'>
-                        #%textResponse[0][i+5]%#
-                    </div>
+                    </article>
+
+                    <article class="panel">
+                        <p class="panel-heading has-text-centered">
+                            <strong>Resumo das opiniões</strong>
+                        </p>
+                        <!--
+                        <div class="panel-block">
+                            <div class="content">
+                                    #%textResponse[i+2]%#
+                                <br/>
+                            </div>
+                        </div>
+                        -->
+
+                        <div class="control">
+                            <textarea class="textarea is-medium" readonly >
+                                #%summaryData%#
+                            </textarea>
+                        </div>
+
+
+                    </article>
                 </div>
             </div>
 
@@ -189,9 +208,10 @@
                                     </header>
                                     <div class="card-content">
                                         <div class="content">
-                                            O produto informado será buscado em diversos sites de e-commerces
-                                            brasileiros de onde
-                                            serão extraídas todas as revisões de usuários que forem encontradas.
+                                            O produto informado será buscado em sites de e-commerce
+                                            brasileiros de onde serão extraídas todas as revisões de
+                                            usuários que forem encontradas. Atualmente a busca é feita apenas no site da Amazon e
+                                            utiliza-se o primeiro produto resultante da busca para extrair as revisões.
                                         </div>
                                     </div>
                                 </div>
@@ -313,6 +333,9 @@
             </div>
 
             <!-- Ferramentas -->
+            <!-- Explicação das ferramentas usando cards de bulma. -->
+            <!-- Criar 1 nova classe tile para cada 2 ferramentas, criar cada ferramenta aninhada em um is-parent -->
+            <!-- Para facilitar, pode ser criado um component posteriormente -->
             <div class="container" v-if="options[currOption] === 'Ferramentas'">
                 <div class="container" v-if="currSubOp === -1">
                     <h1 class="title">
@@ -324,10 +347,12 @@
                         o português pertencente Núcleo Interinstitucional de Linguística Computacional (NILC).
                         Abaixo você encontrará uma breve explicação sobre cada ferramenta e sua respectiva referência.
                     </p>
-                    <div class="tile is-ancestor">
-                        <div class="tile is-vertical">
+
+                    <div class="tile is-ancestor is-vertical">
+                        <!-- primeira linha -->
+                        <div class="tile">
                             <div class="tile is-parent">
-                                <div class="tile is-child card">
+                                <div class="tile is-child card ">
                                     <header class="card-header">
                                         <p class="card-header-title">
                                             Normalizador enelvo
@@ -339,16 +364,42 @@
                                         </div>
                                     </header>
                                     <div class="card-content">
-                                        <div class="content">
-                                            Explicação...
+                                        <div class="content has-text-justified">
+                                            <p>
+                                                Enelvo é uma ferramenta de normalização de CGU desenvolvida para o português.
+                                                Ela é capaz de identificar e corrigir ruídos em textos da web, como tweets, reviews de produtos
+                                                e posts em redes sociais. Os principais ruídos tratados são erros ortográficos, internetês,
+                                                acrônimos, nomes próprios, entre outros.
+                                            </p>
+                                            <p>
+                                                Com este exemplo é possível compreender melhor como a ferramenta funciona na prática:
+                                            </p>
+                                            <figure class="image enelvo-example">
+                                                <img src="{%static 'assets/exemplo_enelvo.png'%}" alt="exemplo de uso do enelvo"/>
+                                            </figure>
+                                            <p>
+                                                A ferramenta está totalmente disponível em um <a href="https://github.com/tfcbertaglia/enelvo" target="_blank">repositório</a> do github
+                                                Para maiores informações acesse o <a href="http://thalesbertaglia.com/enelvo/" target="_blank">site</a> e
+                                                a <a href="https://teses.usp.br/teses/disponiveis/55/55134/tde-10112017-170919/en.php" target="_blank">dissertação</a> do autor.
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="card-footer">
-                                        <div class="card-footer-item">
-                                            Referência...
-                                        </div>
+                                <div class="card-footer">
+                                    <div class="card-footer-item">
+                                        <article class="content">
+                                            <p>
+                                                Bertaglia, Thales Felipe Costa, and Maria das Graças Volpe Nunes. <strong>Exploring Word Embeddings for
+                                                Unsupervised Textual User-Generated Content Normalization</strong>. In the Proceedings of the 2nd
+                                                Workshop on Noisy User-generated Text, pp. 112-120. 2016.
+                                            </p>
+                                        </article>
                                     </div>
                                 </div>
+                            </div>
+
+                            </div>
+
+                            <div class="tile is-parent equal-height">
                                 <div class="tile is-child card">
                                     <header class="card-header">
                                         <p class="card-header-title">
@@ -360,17 +411,57 @@
                                             </span>
                                         </div>
                                     </header>
-                                    <div class="card-content">
-                                        <div class="content">
-                                            Explicação...
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="card-footer-item">
-                                            Referência...
-                                        </div>
+                                <div class="card-content">
+
+                                <div class="content has-text-justified">
+                                    <p>
+                                        O objetivo dessa ferramenta é analisar e estimar o grau de importância de comentários
+                                        gerados por usuários da Web.
+                                        Para isso ela verifica os aspectos reputação do usuário(quando possível), riqueza do vocabulário
+                                        utilizado e frequência de uso de palavras opinativas.
+                                    </p>
+                                    <p>
+                                        Ela foi implementada utilizando dois métodos: Fuzzy e MLP. No primeiro foram designadas regras
+                                        empiricamente combinando os 3 aspectos, enquanto que, no segundo, as regras foram aprendidas a partir
+                                        de um corpus de revisões anotadas do buscapé. Para ambos a saída é dada para cada revisão classificando-a
+                                        de 1 até 4(insuficiente a pleno) em ordem crescente de qualidade.
+                                    </p>
+                                    <p>
+                                        O método Fuzzy não está disponível para utilização online nesse site devido ao custo de processamento,
+                                        no entanto pode ser usado no toolkit. O código fonte está disponível no github tanto para o método <a href="https://github.com/RogerFig/TopX" target="_blank">Fuzzy</a>
+                                        quanto para o <a href="https://github.com/roneysco/TopX/tree/train_predict_features" target="_blank">MLP</a>. Para informações mais detalhadas
+                                        acesse os respectivos artigos <a href="https://github.com/roneysco/TopX" target="_blank">aqui</a> e
+                                        <a href="https://ieeexplore.ieee.org/document/7727261" target="_blank">aqui</a>.
+                                    </p>
+                                </div>
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="card-footer-item">
+                                        <article class="content">
+                                            <p>
+                                                Santos, Roney L. S., Rogerio F. de Sousa, Ricardo A. L. Rabelo andRaimundo S. Moura.<strong>An
+                                                experimental study based on Fuzzy Systems and Artificial Neural Networks to estimate the
+                                                importance of reviews about product and services</strong>. In the Proceedings of the International Joint
+                                                Conference on Neural Networks, pp. 647-653. 2016.
+                                            </p>
+                                            <p>
+                                                Anchiêta, R.T.; Sousa, R.F.; Moura, R.S.; Pardo, T.A.S. <strong>Improving Opinion Summarization by
+                                                Assessing Sentence Importance in On-line Reviews</strong>. In the Proceedings of the 11th Brazilian
+                                                Symposium in Information and Human Language Technology, pp. 32-36. 2017.
+                                            </p>
+
+                                        </article>
                                     </div>
                                 </div>
+                            </div>
+
+                            </div>
+                        </div>
+
+                        <!-- segunda linha -->
+                        <div class="tile">
+                            <div class="tile is-parent">
                                 <div class="tile is-child card">
                                     <header class="card-header">
                                         <p class="card-header-title">
@@ -382,18 +473,29 @@
                                             </span>
                                         </div>
                                     </header>
-                                    <div class="card-content">
-                                        <div class="content">
-                                            Explicação...
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="card-footer-item">
-                                            Referência...
-                                        </div>
+                                <div class="card-content">
+
+                                <div class="content">
+                                </div>
+                                    <p>
+                                        Explicação...
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="card-footer-item">
+                                        <article class="content">
+                                            <p>
+                                                Ferreira, L.G.; Belisário, L.B.; Pardo, T.A.S. <strong>Classificação de subjetividade para a
+                                                língua portuguesa.</strong>In the Proceedings of the VI Workshop de Iniciação Científica em
+                                                Tecnologia da Informação e da Linguagem Humana, pp. 358-361. 2019.
+                                            </p>
+                                        </article>
                                     </div>
                                 </div>
                             </div>
+
+                            </div>
+
                             <div class="tile is-parent">
                                 <div class="tile is-child card">
                                     <header class="card-header">
@@ -406,17 +508,34 @@
                                             </span>
                                         </div>
                                     </header>
-                                    <div class="card-content">
-                                        <div class="content">
-                                            Explicação...
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="card-footer-item">
-                                            Referência...
-                                        </div>
+                                <div class="card-content">
+
+                                <div class="content">
+                                    <p>
+                                        Explicação...
+                                    </p>
+                                </div>
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="card-footer-item">
+                                        <article class ="content">
+                                            <p>
+                                                Costa, R.W.M. <strong>Extração e qualificação de aspectos de opinião para o português.</strong> Trabalho de
+                                                Conclusão de Curso. Instituto de Ciências Matemáticas e de Computação, Universidade de São Paulo.
+                                                São Carlos-SP, November, 47p. 2018.
+                                            </p>
+                                        </article>
                                     </div>
                                 </div>
+                            </div>
+
+                            </div>
+                        </div>
+
+                        <!-- terceira linha -->
+                        <div class="tile">
+                            <div class="tile is-parent">
                                 <div class="tile is-child card">
                                     <header class="card-header">
                                         <p class="card-header-title">
@@ -428,20 +547,44 @@
                                             </span>
                                         </div>
                                     </header>
-                                    <div class="card-content">
-                                        <div class="content">
-                                            Explicação...
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="card-footer-item">
-                                            Referência...
-                                        </div>
+                                <div class="card-content">
+
+                                <div class="content">
+                                    <p>Explicação... </p>
+                                </div>
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="card-footer-item">
+                                        <article class="content">
+                                            <p>
+                                                López Condori, R.E..<strong>Sumarização automática de opiniões baseada em aspectos</strong>. Dissertação de
+                                                Mestrado. Instituto de Ciências Matemáticas e de Computação, Universidade de São Paulo. São
+                                                Carlos-SP, July, 160p. 2015.
+                                            </p>
+                                            <p>
+                                                LópezCondori, R.E. and Pardo, T.A.S.<strong> Opinion Summarization Methods: Comparing and Extending
+                                                Extractive and Abstractive Approaches.</strong> Expert Systems withApplications, Vol. 78, pp. 124-134.
+                                                2017.
+                                            </p>
+                                        </article>
                                     </div>
                                 </div>
                             </div>
+
+                            </div>
+
+                            <!-- cabe inserir mais 1 aqui -->
+                            <!--
+                            <div class="tile is-parent">
+                                <div class="tile is-child card">
+
+                                </div>
+                            </div> -->
                         </div>
                     </div>
+
+
                 </div>
 
                 <!-- Enelvo -->
