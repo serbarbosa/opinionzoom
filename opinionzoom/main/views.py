@@ -36,7 +36,7 @@ def searchQuery(request):
     result.set_script_dir(api_path)
     result.run(save_partial_results=True)
     """
-    query_process = subprocess.run(["python3", api_path+"/sentiment-pipeline.py", searchField], encoding='utf-8', stdout=subprocess.PIPE)
+    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", searchField], encoding='utf-8', stdout=subprocess.PIPE)
 #    return JsonResponse({'search' : searchField})
     return HttpResponse(query_process.stdout)
 
