@@ -4,7 +4,7 @@ import os, sys
 import subprocess
 
 server_path = os.getcwd()
-api_path = server_path+"/main/sentiment_pipeline"
+api_path = server_path+"/main/sentiment-pipeline"
 """
 sys.path.insert(0, server_path+'/main')
 sys.path.insert(0, server_path+'/main/sentiment_pipeline')
