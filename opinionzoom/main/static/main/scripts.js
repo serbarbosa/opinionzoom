@@ -85,6 +85,7 @@ new Vue({
                 this.responseStage = 1;
                 this.$http.get('main/search', {params: {'searchField' : this.searchField}}).then(
                     function(response){
+                        //console.log(response)
                         //segregar dados aqui
                         this.textResponse = response['bodyText'].split("\n")
                         this.summaryData = this.textResponse.slice(4).join("\n").trim()

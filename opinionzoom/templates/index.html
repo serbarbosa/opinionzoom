@@ -475,11 +475,22 @@
                                     </header>
                                 <div class="card-content">
 
-                                <div class="content">
-                                </div>
-                                    <p>
-                                        Explicação...
-                                    </p>
+                                    <div class="content has-text-justified">
+                                        <p>
+                                            Essa ferramenta recebe como entrada um comentário gerado por um usuário da Web e faz análise de subjetividade
+                                            de cada sentença usando método baseada em léxico.
+                                            Nessa análise são contabilizadas as palavras de sentimento positivo("gostei", "feliz") e as de sentimento
+                                            negativo("ruim", "decepção"), obtendo-se posteriormente a diferença entre as palavras positivas e negativas.
+                                            Se essa diferença for diferente de 0, considera-se a sentença como subjetiva e ela permanece na revisão, caso
+                                            contrário é removida.
+                                        </p>
+                                        <p>
+                                            O código está disponível no github do
+                                            <a href="https://github.com/serbarbosa/sentiment-pipeline/blob/master/filtro_subjetividade/sbj_filter.py" target="_blank">toolkit</a>
+                                            e é uma adaptação para python da implementação descrita pelo item 4
+                                            <a href="https://drive.google.com/file/d/1KeyjSujnM090en_HJ5u6YCRRY4PaqNYg/view" target="_blank">dessa</a> publicação.
+                                        </p>
+                                    </div>
                                 </div>
                                 <div class="card-footer">
                                     <div class="card-footer-item">
@@ -510,9 +521,16 @@
                                     </header>
                                 <div class="card-content">
 
-                                <div class="content">
+                                <div class="content has-text-centered">
                                     <p>
-                                        Explicação...
+                                        Essa ferramenta permite encontrar aspectos do produto nos textos de revisão e, a partir das palavras de
+                                        sentimento próximas, classificar se existe sentimento positivo ou negativo expressado com relação
+                                        a eles.
+                                    </p>
+                                    <p>
+                                        Aspectos são palavras que descrevem alguma característica de determinada entidade(nesse caso produto). Um celular,
+                                        por exemplo, terá os aspectos: bateria, preço, velocidade ou até mesmo o próprio produto. Nos textos de revisão
+                                        eles podem aparecer de forma explícita(a palavra que define o aspecto aparece no texto) ou de forma implícita("")
                                     </p>
                                 </div>
 
@@ -549,7 +567,7 @@
                                     </header>
                                 <div class="card-content">
 
-                                <div class="content">
+                                <div class="content has-text-centered">
                                     <p>Explicação... </p>
                                 </div>
 
@@ -664,7 +682,13 @@
                     Documentação
                 </h1>
                 <div class="content">
-                    Explicação de cada função disponibilizada pela API
+                    <p>
+                        Em breve!
+                    </p>
+                    <p>
+                        Por enquanto utilize a documentação interna dos métodos no arquivo sentimentPipeline.py
+                    </p>
+
                 </div>
             </div>
 
@@ -680,7 +704,6 @@
                         <li>usando pip:
                             <ul>
                                 <li>scrapy</li>
-                                <li>selenium</li>
                                 <li>pygal</li>
                                 <li>nltk
                                     <ul class="unstyled">
@@ -695,7 +718,7 @@
                                 <li>enelvo:
                                     <ul class="unstyled">
                                         <li>cd enelvo</li>
-                                        <li>sudo pip install -r requirements.txt</li>
+                                        <li>pip install --user -r requirements.txt</li>
                                         <li>sudo pyhthon3 setup.py install #instalar enelvo</li>
                                     </ul>
                                 </li>
