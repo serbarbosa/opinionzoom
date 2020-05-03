@@ -1,0 +1,4 @@
+[submodule "opinionzoom/main/sentiment-pipeline"]
+	path = opinionzoom/main/sentiment-pipeline
+	url = git@github.com:serbarbosa/sentiment-pipeline.git
+	branch = web-version
