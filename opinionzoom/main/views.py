@@ -3,8 +3,10 @@ from django.http import JsonResponse, HttpResponse
 import os, sys
 import subprocess
 
+print("hh")
 server_path = os.getcwd()
-api_path = server_path+"/main/sentiment-pipeline"
+api_path = server_path+"main/sentiment-pipeline"
+api_path = "home/sbarbosa/arquivos/projeto/opinionzoom/opinionzoom/main/sentiment-pipeline"
 """
 sys.path.insert(0, server_path+'/main')
 sys.path.insert(0, server_path+'/main/sentiment_pipeline')
