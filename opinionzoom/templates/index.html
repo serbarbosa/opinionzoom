@@ -20,22 +20,40 @@
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <!-- usado pra fazer requisicoes http no vue app -->
-
     <!-- template para caixa de insercao de texto -->
     <script type="text/x-template" id="text-input-template">
-            <div class="text-input-box">
-                <div class="text-input-options">
-                    <div class="input-option active" v-on:click.prevent='setSelectionOp(0)'>
-                        Texto
-                    </div>
-                    <div class="input-option" v-on:click.prevent='setSelectionOp(1)'>
-                        Arquivo(.txt)
+
+            <div class="panel">
+                <div class="tabs is-toggle is-fullwidth">
+                    <ul>
+                        <li class="is-active">
+                            <a>Texto</a>
+                        </li>
+                        <li>
+                            <a>Arquivo</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="media">
+
+                    <div class="media-content">
+                        <div class="field">
+                            <p class="control">
+                                <textarea
+                                    class="textarea has-fixed-size is-medium"
+                                    placeholder="Insira o texto usando <enter> como separador"
+                                    rows="7">
+                                </textarea>
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <!-- depende de quem estiver selecionado -->
-                <div class="text-input" v-if="mainPageSelected === 0">
-                    <textarea class="input-area text" rows="16" cols="92"></textarea>
+                <!--
+                <div class="text-input control" v-if="mainPageSelected === 0">
+                    <textarea class="text-area is-large" placeholder="Insira o texto usando <enter> como separador"></textarea>
                 </div>
+                -->
                 <div class="file-input" v-if="mainPageSelected === 1">
                     <div class="input-area file">
                         <input class="file-choose" type="file"></input>
@@ -100,87 +118,84 @@
 
             </div>
 
-            <!-- Formulario de busca -->
-            <div class="container has-text-centered" v-if="options[currOption] === 'OpinionZoom'">
-                <div class="container" v-if="currSubOp === -1 && responseStage === 0">
-                    <div class="opinionzoom-logo">
-                        OpinionZoom
-                    </div>
-                    <form action="main/" method="get">
-                        <div class="field is-grouped" id="search-form">
-                            <div class="control">
-                                <button class="button is-light">Configurar</button>
-                            </div>
-                            <div class="control">
-                                <input class="input" id="search-input" type="text" maxlength="100"
-                                    placeholder="Obter revisões" v-model="searchField"/>
-                            </div>
-                            <div class="control">
-                                <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}"
-                                    v-on:click.prevent="searchQuery()" />
-                            </div>
+            <!-- aba opinionzoom-->
+            <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Use Agora'">
+                    <!-- Formulario de busca -->
+                <div class="container has-text-centered" v-if="subOptions[currOption].ops[currSubOp] === 'Use Agora'">
+                    <div class="container" v-if="responseStage === 0">
+                        <div class="opinionzoom-logo">
+                            OpinionZoom
                         </div>
-                    </form>
+                        <form action="main/" method="get">
+                            <div class="field is-grouped" id="search-form">
+                                <div class="control">
+                                    <button class="button is-light">Configurar</button>
+                                </div>
+                                <div class="control">
+                                    <input class="input" id="search-input" type="text" maxlength="100"
+                                        placeholder="Obter revisões" v-model="searchField"/>
+                                </div>
+                                <div class="control">
+                                    <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}"
+                                        v-on:click.prevent="searchQuery()" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Resultados -->
+                <div class="opinionzoom-0-result" v-if="responseStage > 0">
+
+                    <div class="box content-h2" v-if="responseStage === 1">
+                        <div class="content has-text-centered">
+                            Resgatando e processando revisões para <strong>#%searchField%#</strong>...
+                        </div>
+                        <progress class="progress is-info" max="5">60%</progress>
+                    </div>
+                    <div class="opinionzoom-0-loaded" v-if="responseStage === 2">
+                        <div class="content is-medium">
+                            Foram processadas <strong>#%textResponse[2]%#</strong> revisões para <strong>#%textResponse[0]%#</strong>.
+                        </div>
+
+                        <!--panel para escolha e plotagem do grafico-->
+                        <article class="panel">
+                            <p class="panel-heading has-text-centered">
+                                <strong>Classificação de Aspectos</strong>
+                            </p>
+                            <p class="panel-tabs">
+                                <a class="panel-tab-op is-active is-medium">Barras</a>
+                                <a class="panel-tab-op is-medium">Donut</a>
+                                <a class="panel-tab-op is-medium">Geral</a>
+                            </p>
+                            <div class="panel-block">
+                                <div class="box is-plot-area">
+                                    <canvas id="aspects-chart"></canvas>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="panel">
+                            <p class="panel-heading has-text-centered">
+                                <strong>Resumo das opiniões</strong>
+                            </p>
+
+                            <div class="control">
+                                <textarea class="textarea is-medium" rows="14" readonly >
+                                    #%summaryData%#
+                                </textarea>
+                            </div>
+
+
+                        </article>
+                    </div>
                 </div>
             </div>
 
-            <!-- Resultados -->
-            <div class="opinionzoom-0-result" v-if="responseStage > 0">
 
-                <div class="box content-h2" v-if="responseStage === 1">
-                    <div class="content has-text-centered">
-                        Resgatando e processando revisões para <strong>#%searchField%#</strong>...
-                    </div>
-                    <progress class="progress is-info" max="5">60%</progress>
-                </div>
-                <div class="opinionzoom-0-loaded" v-if="responseStage === 2">
-                    <div class="content is-medium">
-                        Foram processadas <strong>#%textResponse[2]%#</strong> revisões para <strong>#%textResponse[0]%#</strong>.
-                    </div>
-
-                    <!--panel para escolha e plotagem do grafico-->
-                    <article class="panel">
-                        <p class="panel-heading has-text-centered">
-                            <strong>Classificação de Aspectos</strong>
-                        </p>
-                        <p class="panel-tabs">
-                            <a class="panel-tab-op is-active is-medium">Barras</a>
-                            <a class="panel-tab-op is-medium">Donut</a>
-                            <a class="panel-tab-op is-medium">Geral</a>
-                        </p>
-                        <div class="panel-block">
-                            <div class="box is-plot-area">
-                                <canvas id="aspects-chart"></canvas>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="panel">
-                        <p class="panel-heading has-text-centered">
-                            <strong>Resumo das opiniões</strong>
-                        </p>
-                        <!--
-                        <div class="panel-block">
-                            <div class="content">
-                                    #%textResponse[i+2]%#
-                                <br/>
-                            </div>
-                        </div>
-                        -->
-
-                        <div class="control">
-                            <textarea class="textarea is-medium" readonly >
-                                #%summaryData%#
-                            </textarea>
-                        </div>
-
-
-                    </article>
-                </div>
-            </div>
 
             <!-- Como funciona -->
-            <div class="opinionzoom-1" v-else-if="subOptions[currOption].ops[currSubOp] === 'Como funciona?'">
+            <div class="opinionzoom-1" v-else-if="options[currOption] === 'OpinionZoom' && currSubOp==-1">
                 <h1 class="title">Como funciona?</h1>
                 <div class="container">
                     <p>
@@ -605,68 +620,196 @@
 
                 </div>
 
+                <!-- utilizacao individual das ferramentas -->
                 <!-- Enelvo -->
-                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Normalizador'">
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === subOptions[currOption].ops[0]">
                     <!-- Entrada para uso do normalizador -->
-                    <div id="enelvo-header">
-                        <h1 class="title">
-                            Normalizador Enelvo
-                        </h1>
-                    </div>
 
-                    <!-- caixa de input de texto ou de arquivo -->
-                    <form class="text-input-form" action="index.html" method="post">
-                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
-                        </text-input-component>
+                    <section class="section">
+                        <div class="container">
+                            <h1 class="title">Enelvo - Normalizador Textual</h1>
 
-                        <input id="normalize-btn" type="button" name="" value="Iniciar">
-                    </form>
+                            <article class="panel">
+                                <!-- caixa de input de texto ou de arquivo -->
+                                <div class="panel-block">
+                                    <form class="text-input-form" action="index.html" method="post" id="enelvo-input">
+                                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                                        </text-input-component>
+                                        <progress class="progress is-small is-info" v-if="responseStage == 1">15%</progress>
+                                        <input id="normalize-btn" class="tool-btn" type="button" name="" value="Iniciar" v-on:click.prevent="runEnelvo()">
+                                    </form>
+                                </div>
+                            </article>
+
+                        </div>
+
+                        <!-- resultado da normalizacao -->
+                        <article class="panel" id="enelvo-result" v-if="responseStage == 2">
+                            <p class="panel-heading has-text-centered">
+                                <strong>Resultado</strong>
+                            </p>
+
+                            <div class="control">
+                                <textarea class="textarea is-medium" rows="10" readonly >
+                                </textarea>
+                            </div>
+                        </article>
+                    </section>
+
+
                 </div>
 
                 <!-- Filtro de qualidade -->
-                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de qualidade'">
-                    <h1 class="title">
-                        Filtro de qualidade de revisão
-                    </h1>
-                    <form class="text-input-form" action="index.html" method="post">
-                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
-                        </text-input-component>
-                    </form>
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === subOptions[currOption].ops[1]">
+
+                    <section class="section">
+                        <div class="container">
+                            <h1 class="title">Filtro de qualidade(MLP)</h1>
+
+                            <article class="panel">
+                                <!-- caixa de input de texto ou de arquivo -->
+                                <div class="panel-block">
+                                    <form class="text-input-form" action="index.html" method="post" id="qlt-filter-input">
+                                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                                        </text-input-component>
+                                        <progress class="progress is-small is-info" v-if="responseStage == 1">15%</progress>
+                                        <input id="qlt-filter-btn" class="tool-btn" type="button" name="" value="Iniciar" v-on:click.prevent="runQltFilter()">
+                                    </form>
+                                </div>
+                            </article>
+
+                        </div>
+
+                        <!-- resultado da filtragem -->
+                        <article class="panel" id="qlt-filter-result" v-if="responseStage == 2">
+                            <p class="panel-heading has-text-centered">
+                                <strong>Resultado</strong>
+                            </p>
+
+                            <div class="control">
+                                <textarea class="textarea is-medium" rows="10" readonly >
+                                </textarea>
+                            </div>
+                        </article>
+                    </section>
+
+
                 </div>
+
 
                 <!-- Filtro de subjetividade -->
-                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Filtro de subjetividade'">
-                    <h1 class="title">
-                        Filtro de subjetividade de sentenças
-                    </h1>
-                    <form class="text-input-form" action="index.html" method="post">
-                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
-                        </text-input-component>
-                    </form>
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === subOptions[currOption].ops[2]">
+
+                    <section class="section">
+                        <div class="container">
+                            <h1 class="title">Filtro de subjetividade</h1>
+
+                            <article class="panel">
+                                <!-- caixa de input de texto ou de arquivo -->
+                                <div class="panel-block">
+                                    <form class="text-input-form" action="index.html" method="post" id="sbj-filter-input">
+                                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                                        </text-input-component>
+                                        <progress class="progress is-small is-info" v-if="responseStage == 1">15%</progress>
+                                        <input id="sbj-filter-btn" class="tool-btn" type="button" name="" value="Iniciar" v-on:click.prevent="runSbjFilter()">
+                                    </form>
+                                </div>
+                            </article>
+
+                        </div>
+
+                        <!-- resultado da filtragem -->
+                        <article class="panel" id="sbj-filter-result" v-if="responseStage == 2">
+                            <p class="panel-heading has-text-centered">
+                                <strong>Resultado</strong>
+                            </p>
+
+                            <div class="control">
+                                <textarea class="textarea is-medium" rows="10" readonly >
+                                </textarea>
+                            </div>
+                        </article>
+                    </section>
+
+
                 </div>
+
 
                 <!-- Aspectos -->
-                <div class="container"
-                    v-if="subOptions[currOption].ops[currSubOp] === 'Extrator e classificador de aspectos'">
-                    <h1 class="title">
-                        Extrator e classificador de aspectos
-                    </h1>
-                    <form class="text-input-form" action="index.html" method="post">
-                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
-                        </text-input-component>
-                    </form>
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === subOptions[currOption].ops[3]">
+
+                    <section class="section">
+                        <div class="container">
+                            <h1 class="title">Extrator e Classificador de Aspectos</h1>
+
+                            <article class="panel">
+                                <!-- caixa de input de texto ou de arquivo -->
+                                <div class="panel-block">
+                                    <form class="text-input-form" action="index.html" method="post" id="aspect-input">
+                                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                                        </text-input-component>
+                                        <progress class="progress is-small is-info" v-if="responseStage == 1">15%</progress>
+                                        <input id="aspect-btn" class="tool-btn" type="button" name="" value="Iniciar" v-on:click.prevent="runAspect()">
+                                    </form>
+                                </div>
+                            </article>
+
+                        </div>
+
+                        <!-- plotagem da classificação -->
+                        <article class="panel" id="aspect-result" v-if="responseStage == 2">
+                            <p class="panel-heading has-text-centered">
+                                <strong>Resultado</strong>
+                            </p>
+
+                            <div class="control">
+                                <textarea class="textarea is-medium" rows="10" readonly >
+                                </textarea>
+                            </div>
+                        </article>
+                    </section>
+
+
                 </div>
 
-                <!-- Opizer -->
-                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === 'Sumarizador de revisões'">
-                    <h1 class="title">
-                        Sumarizador de revisões Opizer
-                    </h1>
-                    <form class="text-input-form" action="index.html" method="post">
-                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
-                        </text-input-component>
-                    </form>
+
+                <!-- Sumarizador de Opiniões -->
+                <div class="container" v-if="subOptions[currOption].ops[currSubOp] === subOptions[currOption].ops[4]">
+
+                    <section class="section">
+                        <div class="container">
+                            <h1 class="title">Opizer - Sumarizador de Opiniões</h1>
+
+                            <article class="panel">
+                                <!-- caixa de input de texto ou de arquivo -->
+                                <div class="panel-block">
+                                    <form class="text-input-form" action="index.html" method="post" id="opizer-input">
+                                        <text-input-component :main-page-selected="mainPageSelected" v-model="mainPageSelected">
+                                        </text-input-component>
+                                        <progress class="progress is-small is-info" v-if="responseStage == 1">15%</progress>
+                                        <input id="opizer-btn" class="tool-btn" type="button" name="" value="Iniciar" v-on:click.prevent="runOpizer()">
+                                    </form>
+                                </div>
+                            </article>
+
+                        </div>
+
+                        <!-- resultado da sumarizacao -->
+                        <article class="panel" id="opizer-result" v-if="responseStage == 2">
+                            <p class="panel-heading has-text-centered">
+                                <strong>Resultado</strong>
+                            </p>
+
+                            <div class="control">
+                                <textarea class="textarea is-medium" rows="10" readonly >
+                                </textarea>
+                            </div>
+                        </article>
+                    </section>
+
+
                 </div>
+
             </div>
         </div>
 

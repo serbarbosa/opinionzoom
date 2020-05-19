@@ -23,21 +23,53 @@ def index(request):
 
 def searchQuery(request):
     searchField = request.GET['searchField']
-    """
-    result = Sentiment_pipeline(
-            search=searchField,
-            crawl_reviews=True,
-            filter_subjectivity=True,
-            classify_aspects=True,
-            filter_quality_fuzzy=False,
-            filter_quality_mlp=True,
-            summarize='opizere'
-            )
-    result.set_script_dir(api_path)
-    result.run(save_partial_results=True)
-    """
-    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", searchField], encoding='utf-8', stdout=subprocess.PIPE)
+    operation = "pipeline"
+    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", operation, searchField], encoding='utf-8', stdout=subprocess.PIPE)
 #    return JsonResponse({'search' : searchField})
     return HttpResponse(query_process.stdout)
 
+def runEnelvo(request):
+
+    text = request.GET['text']
+    operation = "normalization"
+
+    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", operation, text], encoding='utf-8', stdout=subprocess.PIPE)
+
+    return HttpResponse(query_process.stdout)
+
+def runQltFilter(request):
+
+    text = request.GET['text']
+    operation = "qltFilter"
+
+    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", operation, text], encoding='utf-8', stdout=subprocess.PIPE)
+
+    return HttpResponse(query_process.stdout)
+
+def runSbjFilter(request):
+
+    text = request.GET['text']
+    operation = "sbjFilter"
+
+    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", operation, text], encoding='utf-8', stdout=subprocess.PIPE)
+
+    return HttpResponse(query_process.stdout)
+
+def runAspect(request):
+
+    text = request.GET['text']
+    operation = "aspect"
+
+    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", operation, text], encoding='utf-8', stdout=subprocess.PIPE)
+
+    return HttpResponse(query_process.stdout)
+
+def runOpizer(request):
+
+    text = request.GET['text']
+    operation = "opizer"
+
+    query_process = subprocess.run(["python3", api_path+"/sentiment_pipeline.py", operation, text], encoding='utf-8', stdout=subprocess.PIPE)
+
+    return HttpResponse(query_process.stdout)
 

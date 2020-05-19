@@ -34,18 +34,18 @@ new Vue({
 
             {
                 ops: [
-                    'Como funciona?'
+                    'Use Agora'
                 ],
                 id: 1
             },
 
             {
                 ops:[
-                    'Normalizador',
-                    'Filtro de qualidade',
+                    'Normalizador Enelvo',
+                    'Filtro de qualidade(MLP)',
                     'Filtro de subjetividade',
                     'Extrator e classificador de aspectos',
-                    'Sumarizador de revisões'
+                    'Sumarizador Opizer'
                 ],
                 id: 2
             },
@@ -61,6 +61,7 @@ new Vue({
         ],
         mainPageSelected: 0,    //variavel para controlar opcoes selecionadas(flexivel)
         searchField : '',
+        waitingResponse : false,
         responseStage : 0,
         textResponse: [],       //lista contendo respostas de alguma query. Organizada como conveniente
         chartData: [],
@@ -85,11 +86,11 @@ new Vue({
                 this.responseStage = 1;
                 this.$http.get('main/search', {params: {'searchField' : this.searchField}}).then(
                     function(response){
-                        //console.log(response)
+                        console.log(response)
                         //segregar dados aqui
                         this.textResponse = response['bodyText'].split("\n")
-                        this.summaryData = this.textResponse.slice(4).join("\n").trim()
-
+                        this.summaryData = this.textResponse.slice(4).join("\n")
+                        this.waitingResponse = false;
                         this.responseStage = 2;
                         this.$nextTick(() =>{   //aguarda a pagina terminar de carregar para modificar dom
                             //convertendo dados para formato JSON
@@ -118,6 +119,149 @@ new Vue({
 
         },
 
+        runEnelvo: function(){
+            if (!this.waitingResponse){
+                //recuperando texto da textarea
+                var textarea = document.getElementById("enelvo-input").getElementsByClassName("textarea")[0]
+                var text = textarea.value
+
+                //desabilitando textarea e button
+                document.getElementById("enelvo-input").getElementsByClassName("textarea")[0].disabled = true
+                document.getElementById("normalize-btn").disabled = true
+                this.waitingResponse = true
+                this.responseStage = 1
+
+                this.$http.get('main/enelvo', {params: {'text' : text}}).then(
+                    function(response){
+                        //reabilitando elementos para nova consulta
+                        document.getElementById("enelvo-input").getElementsByClassName("textarea")[0].disabled = false
+                        document.getElementById("normalize-btn").disabled = false
+                        this.responseStage = 2
+                        this.waitingResponse = false
+                        //console.log(response)
+                        this.$nextTick(()=> {
+                            document.getElementById("enelvo-result").getElementsByClassName("textarea")[0].value = response['bodyText']
+                        })
+
+                    }
+                );
+            }
+        },
+
+        runQltFilter: function(){
+            if (!this.waitingResponse){
+                //recuperando texto da textarea
+                var textarea = document.getElementById("qlt-filter-input").getElementsByClassName("textarea")[0]
+                var text = textarea.value
+
+                //desabilitando textarea e button
+                document.getElementById("qlt-filter-input").getElementsByClassName("textarea")[0].disabled = true
+                document.getElementById("qlt-filter-btn").disabled = true
+                this.waitingResponse = true
+                this.responseStage = 1
+
+                this.$http.get('main/qltFilter', {params: {'text' : text}}).then(
+                    function(response){
+                        //reabilitando elementos para nova consulta
+                        document.getElementById("qlt-filter-input").getElementsByClassName("textarea")[0].disabled = false
+                        document.getElementById("qlt-filter-btn").disabled = false
+                        this.responseStage = 2
+                        this.waitingResponse = false
+                        //console.log(response)
+                        this.$nextTick(()=> {
+                            document.getElementById("qlt-filter-result").getElementsByClassName("textarea")[0].value = response['bodyText']
+                        })
+
+                    }
+                );
+            }
+        },
+
+        runSbjFilter: function(){
+            if (!this.waitingResponse){
+                //recuperando texto da textarea
+                var textarea = document.getElementById("sbj-filter-input").getElementsByClassName("textarea")[0]
+                var text = textarea.value
+
+                //desabilitando textarea e button
+                document.getElementById("sbj-filter-input").getElementsByClassName("textarea")[0].disabled = true
+                document.getElementById("sbj-filter-btn").disabled = true
+                this.waitingResponse = true
+                this.responseStage = 1
+
+                this.$http.get('main/sbjFilter', {params: {'text' : text}}).then(
+                    function(response){
+                        //reabilitando elementos para nova consulta
+                        document.getElementById("sbj-filter-input").getElementsByClassName("textarea")[0].disabled = false
+                        document.getElementById("sbj-filter-btn").disabled = false
+                        this.responseStage = 2
+                        this.waitingResponse = false
+                        //console.log(response)
+                        this.$nextTick(()=> {
+                            document.getElementById("sbj-filter-result").getElementsByClassName("textarea")[0].value = response['bodyText']
+                        })
+
+                    }
+                );
+            }
+        },
+        runAspect: function(){
+            if (!this.waitingResponse){
+                //recuperando texto da textarea
+                var textarea = document.getElementById("aspect-input").getElementsByClassName("textarea")[0]
+                var text = textarea.value
+
+                //desabilitando textarea e button
+                document.getElementById("aspect-input").getElementsByClassName("textarea")[0].disabled = true
+                document.getElementById("aspect-btn").disabled = true
+                this.waitingResponse = true
+                this.responseStage = 1
+
+                this.$http.get('main/aspect', {params: {'text' : text}}).then(
+                    function(response){
+                        //reabilitando elementos para nova consulta
+                        document.getElementById("aspect-input").getElementsByClassName("textarea")[0].disabled = false
+                        document.getElementById("aspect-btn").disabled = false
+                        this.responseStage = 2
+                        this.waitingResponse = false
+                        //console.log(response)
+                        this.$nextTick(()=> {
+                            document.getElementById("aspect-result").getElementsByClassName("textarea")[0].value = response['bodyText']
+                        })
+
+                    }
+                );
+            }
+        },
+        runOpizer: function(){
+            if (!this.waitingResponse){
+                //recuperando texto da textarea
+                var textarea = document.getElementById("opizer-input").getElementsByClassName("textarea")[0]
+                var text = textarea.value
+
+                //desabilitando textarea e button
+                document.getElementById("opizer-input").getElementsByClassName("textarea")[0].disabled = true
+                document.getElementById("opizer-btn").disabled = true
+                this.waitingResponse = true
+                this.responseStage = 1
+
+                this.$http.get('main/opizer', {params: {'text' : text}}).then(
+                    function(response){
+                        //reabilitando elementos para nova consulta
+                        document.getElementById("opizer-input").getElementsByClassName("textarea")[0].disabled = false
+                        document.getElementById("opizer-btn").disabled = false
+                        this.responseStage = 2
+                        this.waitingResponse = false
+                        //console.log(response)
+                        this.$nextTick(()=> {
+                            var output = response['bodyText'].split('\n').slice(2).join('\n')
+                            document.getElementById("opizer-result").getElementsByClassName("textarea")[0].value = output
+                        })
+
+                    }
+                );
+            }
+        },
         plotBarChart: function(chartData){
             //inicializando variaveis auxiliares para plotagem
             var dataKeys = [];
