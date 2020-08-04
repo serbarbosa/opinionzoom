@@ -20,7 +20,7 @@ new Vue({
         currOption: 0,
         options:[
             'Início',
-            'OpinionZoom',
+            'OpinionSpot',
             'Ferramentas',
             'API'
             ],

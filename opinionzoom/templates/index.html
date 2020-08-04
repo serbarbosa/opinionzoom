@@ -6,11 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>OpinonZoom</title>
+    <title>OpinonSpot</title>
     {% block css %}
     {% font_awesome %}
+
+    <link rel="stylesheet" type="text/css" href="static/main/styles.css">
+    <link rel="stylesheet" type="text/css" href="static/bulma/css/style.min.css">
+<!--
     <link rel="stylesheet" type="text/css" href="{% static 'main/styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'bulma/css/style.min.css' %}">
+-->
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC&display=swap" rel="stylesheet">
     {% endblock css %}
 </head>
@@ -101,10 +106,10 @@
             <!-- uma nova entrada possivel dependendo da opcao selecionada atualmente -->
             <div class="container" v-if="options[currOption] === 'Início'">
                 <div class="opinionzoom-logo smaller-logo">
-                    Opinionzoom
+                    OpinionSpot
                 </div>
                 Ficou mais prático analisar um produto antes de comprá-lo.
-                Com o OpinionZoom você não precisa mais ficar lendo centenas de comentários
+                Com o OpinionSpot você não precisa mais ficar lendo centenas de comentários
                 para decidir se o celular que você quer comprar vale a pena mesmo.
                 Basta informar o nome do produto desejado para o programa buscar as
                 opiniões sobre ele na web. Esses dados serão então processados utilizando técnicas
@@ -112,7 +117,7 @@
                 Essa aplicação foi desenvolvida no ICMC-USP como parte do projeto OPINANDO do NILC.
                 Aqui você encontrará também as ferramentas que forem desenvolvidas pelo projeto OPINANDO
                 disponíveis para utilização online.
-                Para entender melhor o funcionamento do OpinionZoom, acesse a aba "OpinionZoom"->"Como funciona?".
+                Para entender melhor o funcionamento do OpinionSpot, acesse a aba "OpinionSpot"->"Como funciona?".
                 Além dessa versão web, existe também a versão em formato de API que pode ser obtida <a
                     href="https://github.com/serbarbosa/sentiment-pipeline" target="_blank">aqui</a>.
 
@@ -124,19 +129,19 @@
                 <div class="container has-text-centered" v-if="subOptions[currOption].ops[currSubOp] === 'Use Agora'">
                     <div class="container" v-if="responseStage === 0">
                         <div class="opinionzoom-logo">
-                            OpinionZoom
+                            OpinionSpot
                         </div>
                         <form action="main/" method="get">
                             <div class="field is-grouped" id="search-form">
-                                <div class="control">
-                                    <button class="button is-light">Configurar</button>
-                                </div>
+				    <div class="control">
+					    <!--<button class="button is-light">Configurar</button> -->
+				    </div>
                                 <div class="control">
                                     <input class="input" id="search-input" type="text" maxlength="100"
                                         placeholder="Obter revisões" v-model="searchField"/>
                                 </div>
                                 <div class="control">
-                                    <input id="search-submit" type="image" src="{%static 'assets/doc.png'%}"
+                                    <input id="search-submit" type="image" src="static/assets/doc.png"
                                         v-on:click.prevent="searchQuery()" />
                                 </div>
                             </div>
@@ -195,7 +200,7 @@
 
 
             <!-- Como funciona -->
-            <div class="opinionzoom-1" v-else-if="options[currOption] === 'OpinionZoom' && currSubOp==-1">
+            <div class="opinionzoom-1" v-else-if="options[currOption] === 'OpinionSpot' && currSubOp==-1">
                 <h1 class="title">Como funciona?</h1>
                 <div class="container">
                     <p>
@@ -218,8 +223,11 @@
                                             Crawler de revisões
                                         </p>
                                         <div class="card-header-icon">
-                                            <img class="icon" src="{%static 'assets/crawler.png'%}" alt="web crawler">
-                                        </div>
+                                            <!--
+						<img class="icon" src="{%static 'assets/crawler.png'%}" alt="web crawler">
+                        			-->
+                                            <img class="icon" src="static/assets/crawler.png" alt="web crawler">
+					   </div>
                                     </header>
                                     <div class="card-content">
                                         <div class="content">
@@ -390,8 +398,12 @@
                                                 Com este exemplo é possível compreender melhor como a ferramenta funciona na prática:
                                             </p>
                                             <figure class="image enelvo-example">
+						<!--
                                                 <img src="{%static 'assets/exemplo_enelvo.png'%}" alt="exemplo de uso do enelvo"/>
-                                            </figure>
+                                            	-->
+                                                <img src="static/assets/exemplo_enelvo.png" alt="exemplo de uso do enelvo"/>
+
+					    </figure>
                                             <p>
                                                 A ferramenta está totalmente disponível em um <a href="https://github.com/tfcbertaglia/enelvo" target="_blank">repositório</a> do github
                                                 Para maiores informações acesse o <a href="http://thalesbertaglia.com/enelvo/" target="_blank">site</a> e
@@ -903,21 +915,24 @@
                     <div class="column">
                         <figure class="image is-128x128 is-inline-block">
                             <a href="https://sites.google.com/icmc.usp.br/opinando" target="_blank">
-                                <img src="{%static 'assets/opinando.png'%}" alt="OPINANDO">
+                                <!--
+				    <img src="{%static 'assets/opinando.png'%}" alt="OPINANDO">
+				-->
+				    <img src="static/assets/opinando.png" alt="OPINANDO">
                             </a>
                         </figure>
                     </div>
                     <div class="column">
                         <figure class="image is-128x128 is-inline-block">
                             <a href="http://www.nilc.icmc.usp.br/nilc/index.php" target="_blank">
-                                <img src="{%static 'assets/nilc.png'%}" alt="NILC">
+                                <img src="static/assets/nilc.png" alt="NILC">
                             </a>
                         </figure>
                     </div>
                     <div class="column">
                         <figure class="image is-128x128 is-inline-block">
                             <a href="https://www.icmc.usp.br/" target="_blank">
-                                <img src="{%static 'assets/icmc_dark.png'%}" alt="ICMC">
+                                <img src="static/assets/icmc_dark.png" alt="ICMC">
                             </a>
                         </figure>
                     </div>
@@ -925,8 +940,10 @@
             </div>
         </footer>
     </div>
-
-    <script type="text/javascript" src="{%static 'main/scripts.js'%}"></script>
+    <!--
+	<script type="text/javascript" src="{%static 'main/scripts.js'%}"></script> 
+    -->
+    <script type="text/javascript" src="static/main/scripts.js"></script>
 </body>
 
 </html>
